@@ -1,0 +1,21 @@
+{
+  "name": "Jakobi Davis",
+  "domain": "jakobidavis.com",
+  "roleLine": "Energy systems engineer. Author. Founder. Former D1 captain.",
+  "email": "career@jakobidavis.com",
+  "linkedin": "https://www.linkedin.com/in/jakobi-davis/",
+  "github": "https://github.com/webdevkobi",
+  "calcom": "https://cal.com/jakobidavis",
+  "calcomDiscovery": "https://cal.com/jakobidavis/discovery",
+  "championsVoice": "https://championsvoice.org",
+  "resumeUpdated": "September 2026",
+  "nav": [
+    { "label": "Projects", "href": "/projects/" },
+    { "label": "Models", "href": "/models/" },
+    { "label": "About", "href": "/about/" },
+    { "label": "Writing", "href": "/writing/" },
+    { "label": "Credentials", "href": "/credentials/" },
+    { "label": "Resume", "href": "/resume/" },
+    { "label": "Contact", "href": "/contact/" }
+  ]
+}

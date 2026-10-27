@@ -1,0 +1,471 @@
+---
+import Base from "../layouts/Base.astro";
+import model from "../data/carbon-price.json";
+import { rowAtPrice, formatShare, formatPrice } from "../lib/carbon-model";
+
+const rows = model.averageYear.rows;
+const MIN = rows[0].price;
+const MAX = rows[rows.length - 1].price;
+const STEP = 5;
+const START_PRICE = MAX;
+const GOAL = model.goalShare;
+
+// Server-rendered starting state, so the page reads correctly before and
+// without JavaScript.
+const start = rowAtPrice(rows, START_PRICE);
+
+const title = "Models";
+const description =
+  "An interactive carbon price model from my Cornell capstone. Move the price from $0 to $55 a ton and read renewable share and system cost off the AMPL runs.";
+---
+
+<Base title={title} description={description}>
+  <section class="section">
+    <div class="wrap">
+      <p class="eyebrow">Models</p>
+      <h1>What a carbon price buys New York.</h1>
+      <p class="lede">
+        Every step on this slider is a run of the model, not a point drawn
+        between two. At {formatPrice(MAX)} the system clears the {GOAL}% goal
+        in an average resource year. Whether it holds there depends on the
+        weather.
+      </p>
+    </div>
+  </section>
+
+  <section class="section plain">
+    <div class="wrap">
+      {/* The slider is a renewable energy finding you operate, so it rides on
+          the forest bento. */}
+      <div class="bento green tool" data-tool data-reveal>
+        <div class="control">
+          <div class="control-head">
+            <div>
+              <label class="label" for="price">Carbon price</label>
+              <output class="price figure-num" id="price-out" for="price">
+                {formatPrice(START_PRICE)}
+              </output>
+            </div>
+            {/* The one handwritten note on this page. */}
+            <p class="hand note-drag" aria-hidden="true">
+              <span>move it</span>
+              <svg width="28" height="24" viewBox="0 0 28 24" fill="none" aria-hidden="true">
+                <path
+                  d="M1 2c2.5 7.5 7.5 14.5 14.5 18 3 1.5 6.5 2.3 10.5 2.5"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                />
+                <path
+                  d="M26 22.5l-5.8-2.6M26 22.5l-4.4 3.3"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </p>
+          </div>
+
+          <input
+            type="range"
+            id="price"
+            name="price"
+            min={MIN}
+            max={MAX}
+            step={STEP}
+            value={START_PRICE}
+            data-price-input
+            aria-describedby="price-help"
+          />
+          <div class="scale meta num" aria-hidden="true">
+            <span>${MIN}</span>
+            <span>${MAX} per ton</span>
+          </div>
+          <p class="meta" id="price-help">
+            Dollars per ton of carbon dioxide, {MIN} to {MAX}, in ${STEP} steps.
+            Every step is a model run.
+          </p>
+        </div>
+
+        <ul class="readout">
+          <li>
+            <span class="stat-label">Renewable share, average year</span>
+            <output class="stat-value" data-out="share">
+              {formatShare(start.share)}
+            </output>
+            <div class="bar">
+              <span
+                class="bar-fill is-average"
+                data-bar="share"
+                style={`width: ${start.share}%`}></span>
+              <span class="bar-goal" style={`left: ${GOAL}%`} aria-hidden="true"
+              ></span>
+            </div>
+            <p class="bar-key meta" aria-hidden="true">
+              Marker at the {GOAL}% goal
+            </p>
+          </li>
+          <li>
+            <span class="stat-label">Total system cost</span>
+            <output class="stat-value" data-out="cost">{start.cost}</output>
+            <p class="stat-foot meta">
+              Gas supplies <span data-out="gas">{formatShare(start.gas)}</span> of
+              generation at this price.
+            </p>
+          </li>
+        </ul>
+
+        <div class="jumps">
+          <span class="label">Jump to</span>
+          <div class="btn-row">
+            <button type="button" class="btn small" data-jump={MIN}>
+              <span class="num">{formatPrice(MIN)}</span>
+              <span class="jump-note">No carbon price</span>
+            </button>
+            <button type="button" class="btn small" data-jump={MAX}>
+              <span class="num">{formatPrice(MAX)}</span>
+              <span class="jump-note">Clears the goal</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* The slider answers an average year. This is the same price under a
+          better and a worse one, which is the actual finding. */}
+      <div class="bento stress" data-reveal>
+        <h2 class="block-label">
+          Stress test: hold the price at {formatPrice(model.stressTest.price)},
+          change the weather
+        </h2>
+        <ul class="scenarios">
+          {
+            model.stressTest.scenarios.map((s) => (
+              <li class:list={["scenario", `is-${s.key}`]}>
+                <div class="scenario-head">
+                  <span class="scenario-label">
+                    {s.label} <span class="meta num">{s.availability}</span>
+                  </span>
+                  <span class="scenario-share figure-num">
+                    {formatShare(s.share)}
+                  </span>
+                </div>
+                <div class="bar light">
+                  <span
+                    class:list={["bar-fill", `is-${s.key}`]}
+                    style={`width: ${s.share}%`}
+                  />
+                  <span class="bar-goal" style={`left: ${GOAL}%`} aria-hidden="true" />
+                </div>
+                <p class="meta scenario-foot">
+                  {s.costPerMw} per MW
+                </p>
+              </li>
+            ))
+          }
+        </ul>
+
+        <p class="finding">
+          A poor year needs <span class="figure-num"
+            >{formatPrice(model.worstCase.price)}</span
+          > to hold {model.worstCase.share}% renewables. That is {
+            model.worstCase.increaseOverBase
+          } more than {formatPrice(model.stressTest.price)}, at {
+            model.worstCase.costPerMw
+          } per MW.
+        </p>
+      </div>
+
+      <div class="bento caveat" data-reveal>
+        <h2 class="block-label">What this is</h2>
+        <div class="prose">
+          <p>
+            {model.provenance} The slider runs from {formatPrice(MIN)} to {
+              formatPrice(MAX)
+            } because that is the range the average year was run at. There is no
+            line drawn past it.
+          </p>
+          <p>
+            It is a model output, not a forecast. It depends on the cost
+            assumptions for new capacity, the load trajectory, and the resource
+            years used to define an average year and a poor one.
+          </p>
+          <p>
+            Source: <a href="/projects/nyiso-capacity-expansion-carbon-tax/"
+              >{model.source}</a
+            >.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<script>
+  import model from "../data/carbon-price.json";
+  import { rowAtPrice, formatShare, formatPrice } from "../lib/carbon-model";
+
+  const tool = document.querySelector<HTMLElement>("[data-tool]");
+  const input = document.querySelector<HTMLInputElement>("[data-price-input]");
+  const priceOut = document.querySelector<HTMLOutputElement>("#price-out");
+  const rows = model.averageYear.rows;
+
+  function paint(price: number) {
+    const row = rowAtPrice(rows, price);
+    if (priceOut) priceOut.textContent = formatPrice(row.price);
+
+    const shareOut = tool?.querySelector<HTMLElement>('[data-out="share"]');
+    const costOut = tool?.querySelector<HTMLElement>('[data-out="cost"]');
+    const gasOut = tool?.querySelector<HTMLElement>('[data-out="gas"]');
+    const bar = tool?.querySelector<HTMLElement>('[data-bar="share"]');
+
+    if (shareOut) shareOut.textContent = formatShare(row.share);
+    if (costOut) costOut.textContent = row.cost;
+    if (gasOut) gasOut.textContent = formatShare(row.gas);
+    if (bar) bar.style.width = `${row.share}%`;
+
+    input?.setAttribute(
+      "aria-valuetext",
+      `${formatPrice(row.price)}. Renewable share ${formatShare(row.share)}. Total system cost ${row.cost}.`,
+    );
+  }
+
+  input?.addEventListener("input", () => paint(Number(input.value)));
+
+  for (const button of document.querySelectorAll<HTMLButtonElement>("[data-jump]")) {
+    button.addEventListener("click", () => {
+      const price = Number(button.dataset.jump);
+      if (input) input.value = String(price);
+      paint(price);
+    });
+  }
+
+  if (input) paint(Number(input.value));
+</script>
+</Base>
+
+
+
+<style>
+  .tool {
+    display: grid;
+    gap: clamp(26px, 3.6vw, 38px);
+  }
+
+  .control-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 10px 24px;
+    margin-bottom: 18px;
+  }
+  .control label { display: block; margin-bottom: 6px; }
+  .price {
+    display: block;
+    font-size: clamp(2.2rem, 1.5rem + 3.2vw, 3.4rem);
+    color: var(--on-dark);
+  }
+  .note-drag { margin: 0 0 6px; }
+
+  input[type="range"] {
+    width: 100%;
+    margin: 0;
+    background: transparent;
+    -webkit-appearance: none;
+    appearance: none;
+    cursor: pointer;
+  }
+  input[type="range"]::-webkit-slider-runnable-track {
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.28);
+  }
+  input[type="range"]::-moz-range-track {
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.28);
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 26px;
+    height: 26px;
+    margin-top: -11px;
+    border: 2px solid var(--on-dark);
+    border-radius: 50%;
+    background: var(--green);
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 26px;
+    height: 26px;
+    border: 2px solid var(--on-dark);
+    border-radius: 50%;
+    background: var(--green);
+  }
+  input[type="range"]:focus-visible { outline-offset: 6px; }
+
+  .scale {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+  #price-help { margin-top: 6px; }
+
+  .readout {
+    display: grid;
+    gap: clamp(22px, 3vw, 32px);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--on-dark-rule);
+    padding-top: clamp(24px, 3.5vw, 34px);
+  }
+  @media (min-width: 720px) {
+    .readout { grid-template-columns: repeat(2, 1fr); gap: 40px; }
+  }
+  .readout .stat-label {
+    display: block;
+    font-size: var(--step-label);
+    font-weight: 500;
+    color: var(--on-dark-2);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .readout .stat-value {
+    display: block;
+    margin: 8px 0 12px;
+    font-family: var(--display);
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
+    font-size: clamp(1.8rem, 1.3rem + 1.8vw, 2.5rem);
+    letter-spacing: -0.02em;
+    line-height: 1.08;
+    color: var(--on-dark);
+  }
+  .stat-foot { margin: 0; }
+  .bar-key { margin: 8px 0 0; }
+
+  .bar {
+    position: relative;
+    height: 10px;
+    background: rgba(255, 255, 255, 0.14);
+    border-radius: var(--r-pill);
+    overflow: hidden;
+  }
+  .bar-fill {
+    display: block;
+    height: 100%;
+    border-radius: var(--r-pill);
+    transition: width 160ms ease-out;
+  }
+  /* The goal line sits on the track, so you can see the share cross it
+     rather than having to compare it to a number in the copy. */
+  .bar-goal {
+    position: absolute;
+    top: -2px;
+    bottom: -2px;
+    width: 2px;
+    background: var(--on-dark);
+    opacity: 0.85;
+  }
+  .bar-fill.is-average,
+  .bar-fill.is-share { background: var(--green); }
+  @media (prefers-reduced-motion: reduce) {
+    .bar-fill { transition: none; }
+  }
+
+  .jumps {
+    border-top: 1px solid var(--on-dark-rule);
+    padding-top: clamp(20px, 3vw, 28px);
+  }
+  .jumps .label { display: block; margin-bottom: 12px; }
+  .btn.small {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1px;
+    padding: 9px 20px;
+    font-size: 0.9375rem;
+  }
+  .jump-note {
+    font-size: var(--step-label);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--on-dark-2);
+  }
+  .btn.small:hover .jump-note { color: var(--forest); }
+
+  /* ---- the stress test, on paper rather than in the green bento --------- */
+  .stress { margin-top: clamp(14px, 2vw, 22px); }
+  .scenarios {
+    display: grid;
+    gap: clamp(20px, 2.6vw, 28px);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .scenario-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 4px 16px;
+    margin-bottom: 10px;
+  }
+  .scenario-label {
+    font-size: var(--step-label);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+  .scenario-share {
+    font-family: var(--display);
+    font-size: clamp(1.4rem, 1.1rem + 1vw, 1.9rem);
+    line-height: 1;
+    color: var(--ink);
+  }
+  /* On paper the track needs ink, not white, behind the fill. */
+  .bar.light { background: rgba(31, 93, 69, 0.14); }
+  /* The marker has to read against the pale track AND against a fill that
+     has already run past it, so it is a paper-coloured line with an ink
+     edge rather than one flat colour that disappears on one of the two. */
+  .bar.light .bar-goal {
+    background: var(--card);
+    box-shadow: 0 0 0 1px rgba(31, 93, 69, 0.5);
+    opacity: 1;
+  }
+  .bar-fill.is-average { background: var(--green); }
+  .bar-fill.is-good { background: var(--forest); }
+  /* The poor year reads as the same quantity under worse conditions, so it
+     keeps the shape and drops the accent. */
+  .bar-fill.is-poor {
+    background: repeating-linear-gradient(
+      -45deg,
+      var(--forest) 0 3px,
+      transparent 3px 6px
+    );
+  }
+  .scenario-foot { margin: 8px 0 0; }
+
+  .finding {
+    margin: clamp(24px, 3.2vw, 32px) 0 0;
+    padding-top: clamp(20px, 2.6vw, 26px);
+    border-top: 1px solid var(--rule);
+    font-size: var(--step-1);
+    color: var(--ink);
+  }
+
+  /* The caveat is its own white bento, since this band sits on bare paper. */
+  .caveat { margin-top: clamp(14px, 2vw, 22px); }
+  .block-label {
+    font-family: var(--sans);
+    font-size: var(--step-label);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    line-height: 1.45;
+    color: var(--ink-2);
+    margin-bottom: 1.1rem;
+  }
+</style>

@@ -1,0 +1,42 @@
+{
+  "source": "CEE 4880 capstone, NYISO capacity expansion under a carbon tax, Spring 2025",
+  "citation": "Raab, Davis, Norris, \"Environmental Impacts of Capacity Expansion: Manipulating Carbon Penalties and Uncertainty Analysis to Reach Goal Resource Mix\", Spring 2025",
+  "provenance": "Model output, CEE 4880 capstone (AMPL), NYISO 11-zone, one year of data.",
+  "goalShare": 70,
+  "averageYear": {
+    "label": "Average year",
+    "availability": "1.0x",
+    "note": "Table 1, p. 6. Renewable share is 1 minus the paper's percent gas. The model was not run above $55 for the average year.",
+    "rows": [
+      { "price": 0, "gas": 45.0, "share": 55.0, "cost": "$9.18B" },
+      { "price": 5, "gas": 43.4, "share": 56.6, "cost": "$9.34B" },
+      { "price": 10, "gas": 41.7, "share": 58.3, "cost": "$9.49B" },
+      { "price": 15, "gas": 40.3, "share": 59.7, "cost": "$9.63B" },
+      { "price": 20, "gas": 37.6, "share": 62.4, "cost": "$9.77B" },
+      { "price": 25, "gas": 36.0, "share": 64.0, "cost": "$9.89B" },
+      { "price": 30, "gas": 34.5, "share": 65.5, "cost": "$10.0B" },
+      { "price": 35, "gas": 33.0, "share": 67.0, "cost": "$10.1B" },
+      { "price": 40, "gas": 31.9, "share": 68.1, "cost": "$10.3B" },
+      { "price": 45, "gas": 31.0, "share": 69.0, "cost": "$10.4B" },
+      { "price": 50, "gas": 30.2, "share": 69.8, "cost": "$10.5B" },
+      { "price": 55, "gas": 29.5, "share": 70.5, "cost": "$10.6B" }
+    ]
+  },
+  "stressTest": {
+    "price": 55,
+    "note": "Figure 6, p. 7. Renewable availability scaled against the average year, carbon tax held at $55 per ton.",
+    "scenarios": [
+      { "key": "poor", "label": "Poor year", "availability": "0.7x", "share": 56.0, "costPerMw": "$28.00" },
+      { "key": "average", "label": "Average year", "availability": "1.0x", "share": 70.5, "costPerMw": "$25.10" },
+      { "key": "good", "label": "Good year", "availability": "1.3x", "share": 78.3, "costPerMw": "$22.80" }
+    ]
+  },
+  "worstCase": {
+    "note": "Sensitivity analysis text, p. 8.",
+    "price": 120,
+    "share": 70,
+    "availability": "0.7x",
+    "costPerMw": "$27.36",
+    "increaseOverBase": "118%"
+  }
+}

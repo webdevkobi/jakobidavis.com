@@ -1,0 +1,17 @@
+---
+import { isTodo, todoText } from "../lib/placeholders";
+
+interface Props {
+  value: string;
+}
+
+const { value } = Astro.props;
+---
+
+{
+  isTodo(value) ? (
+    <span class="ph">{todoText(value)}</span>
+  ) : (
+    <span>{value}</span>
+  )
+}

@@ -1,54 +1,534 @@
+/* ==========================================================================
+   jakobidavis.com
+
+   Warm paper, graph-ruled, with content in bento boxes on top of it.
+
+   Type: Newsreader (serif) for headings and big numbers, at weight 500 and
+   never bold. Inter for body, nav, buttons and labels. Caveat for the rare
+   handwritten margin note, in the forest ink.
+
+   Color: forest green #1F5D45 is the one large fill, used for renewable
+   energy findings. Brand green #3fbf86 is graphic only, because on paper it
+   reads at about 2:1 and cannot carry words. White on forest is 7.7:1 and the
+   muted-on-forest token is 5.0:1, so both pass AA.
+   ========================================================================== */
+
 :root {
-  --ink: #0f1a2b;
-  --ink-soft: #3b4658;
-  --paper: #f6f3ec;
+  --green: #3fbf86;
+
+  --page: #f6f3ec;
+  --ink: #1c1a17;
+  --ink-2: #5a5047;
+  --forest: #1f5d45;
+
+  /* Bentos are white so they mask the grid and keep text off the rules. */
   --card: #ffffff;
-  --line: #ddd6c8;
-  --gold: #c8922a;
-  --gold-soft: #e8b04a;
-  --max: 1080px;
-  --serif: "Fraunces", Georgia, serif;
-  --sans: "Inter", system-ui, -apple-system, Segoe UI, sans-serif;
+  --panel: #fbf9f4;
+  /* Sage: the tinted panel the hero cutout stands in. Carries no text. */
+  --sage: #dce6dd;
+
+  --rule: #e3dacb;
+  --rule-strong: #d6cab4;
+  --rule-dash: #c8bba3;
+
+  /* Graph paper: warm gray-green, minor every 24px, major every 120px. */
+  --grid-minor: rgba(90, 100, 84, 0.04);
+  --grid-major: rgba(90, 100, 84, 0.07);
+  --grid-minor-step: 24px;
+  --grid-major-step: 120px;
+
+  /* On the forest bentos and the dark footer. */
+  --on-dark: #ffffff;
+  --on-dark-2: rgba(255, 255, 255, 0.74);
+  --on-dark-rule: rgba(255, 255, 255, 0.18);
+
+  --sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --display: "Newsreader", ui-serif, Georgia, "Times New Roman", serif;
+  --hand: "Caveat", "Segoe Script", cursive;
+
+  --r: 24px;
+  --r-sm: 14px;
+  --r-pill: 999px;
+
+  --wrap: 1120px;
+  --measure: 66ch;
+  --pad: 20px;
+  --gutter: clamp(10px, 2.2vw, 26px);
+  --bento-pad: clamp(28px, 3.4vw, 36px);
+
+  --step-label: 0.6875rem; /* 11px */
+  --step--1: 0.8125rem;
+  --step-0: 1.0625rem;
+  --step-1: 1.1875rem;
+  --step-2: clamp(1.45rem, 1.15rem + 1.1vw, 1.75rem);
+  --step-3: clamp(1.85rem, 1.4rem + 2vw, 2.5rem);
+  --step-4: clamp(2.3rem, 1.5rem + 3.4vw, 3.6rem);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --ink: #f1ede4;
-    --ink-soft: #b6bdc9;
-    --paper: #0d1522;
-    --card: #142034;
-    --line: #26344b;
-    --gold: #e8b04a;
-  }
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  background-color: var(--page);
 }
 
-* { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+/* --------------------------------------------------------- graph paper ---- */
+
 body {
   margin: 0;
-  background: var(--paper);
   color: var(--ink);
   font-family: var(--sans);
-  font-size: 17px;
+  font-size: var(--step-0);
+  font-weight: 400;
   line-height: 1.6;
+  font-synthesis-weight: none;
+  -webkit-font-smoothing: antialiased;
+
+  background-color: var(--page);
+  /* Major lines first so they paint over the minor ones. */
+  background-image:
+    repeating-linear-gradient(
+      to right,
+      var(--grid-major) 0 1px,
+      transparent 1px var(--grid-major-step)
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      var(--grid-major) 0 1px,
+      transparent 1px var(--grid-major-step)
+    ),
+    repeating-linear-gradient(
+      to right,
+      var(--grid-minor) 0 1px,
+      transparent 1px var(--grid-minor-step)
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      var(--grid-minor) 0 1px,
+      transparent 1px var(--grid-minor-step)
+    );
+  background-position: 0 0;
 }
-a { color: inherit; }
-img { max-width: 100%; display: block; }
 
-.wrap { max-width: var(--max); margin: 0 auto; padding: 0 20px; }
+img, svg { max-width: 100%; display: block; }
 
-h1, h2, h3 { font-family: var(--serif); line-height: 1.1; margin: 0 0 0.5em; }
-h1 { font-size: clamp(2.6rem, 7vw, 5rem); letter-spacing: -0.02em; }
-h2 { font-size: clamp(1.8rem, 4vw, 2.6rem); }
-h3 { font-size: 1.25rem; }
+/* --------------------------------------------------------- headings ------- */
+
+/* Newsreader at 500. Nothing on the site uses a bold heading. */
+h1, h2, h3, h4 {
+  margin: 0 0 0.5em;
+  font-family: var(--display);
+  font-weight: 500;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+h1 { font-size: var(--step-4); }
+h2 { font-size: var(--step-3); }
+h3 { font-size: var(--step-2); }
+h4 { font-size: var(--step-1); }
+
+p, ul, ol { margin: 0 0 1em; }
+p:last-child { margin-bottom: 0; }
+
+/* Links: dark text, forest rule underneath. Color is never the only signal. */
+a {
+  color: inherit;
+  text-decoration-color: var(--forest);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+a:hover { text-decoration-thickness: 3px; }
+
+:where(a, button, input, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* No bold in the serif, and only medium in the sans. */
+strong { font-weight: 500; }
+
+/* No monospace face on the site. Inline code is a tinted chip in Inter. */
+code {
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: 0.92em;
+  padding: 0.1em 0.3em;
+  border-radius: 5px;
+  background: rgba(28, 26, 23, 0.06);
+  color: var(--ink-2);
+}
+
+/* --------------------------------------------------------- layout --------- */
+
+.wrap {
+  width: 100%;
+  max-width: var(--wrap);
+  margin-inline: auto;
+  padding-inline: var(--pad);
+}
+
+.prose { max-width: var(--measure); }
+.prose > * + * { margin-top: 1em; }
+
+/* A section is a band of paper. Its .wrap is the bento that sits on it. */
+.section {
+  padding-inline: var(--gutter);
+  padding-block: clamp(9px, 1.3vw, 15px);
+}
+.section > .wrap {
+  padding: var(--bento-pad);
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: var(--r);
+}
+
+/* Sections whose contents are already bentos stay on bare paper, so the grid
+   shows through the gaps between them. */
+.section.plain > .wrap {
+  padding-inline: 0;
+  padding-block: clamp(9px, 1.3vw, 15px);
+  background: none;
+  border: 0;
+  border-radius: 0;
+}
+
+main > .section:first-child,
+main > * > .section:first-child { padding-top: clamp(18px, 3vw, 34px); }
+
+.stack > * + * { margin-top: var(--gap, 1rem); }
+
+.grid {
+  display: grid;
+  gap: clamp(14px, 2vw, 22px);
+}
+@media (min-width: 720px) {
+  .grid.two { grid-template-columns: repeat(2, 1fr); }
+  .grid.three { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* --------------------------------------------------------- bentos --------- */
+
+.bento,
+.card {
+  padding: var(--bento-pad);
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: var(--r);
+}
+a.bento,
+a.card {
+  display: block;
+  text-decoration: none;
+  transition: border-color 140ms ease, transform 140ms ease;
+}
+a.bento:hover,
+a.card:hover {
+  border-color: var(--rule-strong);
+  transform: translateY(-2px);
+}
+
+/* A bento nested inside a bento drops to the tinted panel. */
+.section:not(.plain) > .wrap :where(.card, .bento):not(.green) {
+  background: var(--panel);
+}
+
+/* ---- the forest bento: renewable energy findings and highlights --------- */
+
+.bento.green,
+.card.green,
+.section.green > .wrap {
+  background: var(--forest);
+  border-color: var(--forest);
+  color: var(--on-dark);
+}
+/* These use :is() rather than :where() on purpose: the label and .meta rules
+   further down the file are single-class, so a zero-specificity override
+   would lose to them and the muted text would come back as brown ink. */
+.green :is(h1, h2, h3, h4, strong) { color: var(--on-dark); }
+.green :is(p, .lede, .meta, .summary, dd) { color: var(--on-dark-2); }
+.green :is(.label, .file-kind, figcaption, .stat-label, dt) {
+  color: var(--on-dark-2);
+}
+.green .eyebrow { color: var(--on-dark); }
+.green .eyebrow::before { background: var(--green); }
+.green a { color: var(--on-dark); text-decoration-color: var(--green); }
+.green :is(a, button):focus-visible { outline-color: var(--green); }
+.green code { background: rgba(255, 255, 255, 0.12); color: var(--on-dark); }
+
+/* Numbers on forest are white; .accent is how brand green gets onto one. */
+.green .figure-num { color: var(--on-dark); }
+.green .figure-num.accent,
+.green .accent { color: var(--green); }
+
+a.bento.green:hover,
+a.card.green:hover { background: #246b4f; border-color: #246b4f; }
+
+/* --------------------------------------------------------- small labels --- */
+
+/* Eyebrows, nav, tags, captions, field names. 11px Inter, tracked out. */
+.label,
+.eyebrow,
+.file-kind,
+.stats .stat-label,
+.stats dt,
+figcaption {
+  font-family: var(--sans);
+  font-size: var(--step-label);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1.45;
+  color: var(--ink-2);
+}
 
 .eyebrow {
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--gold);
-  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.7em;
+  margin: 0 0 1.1rem;
+  color: var(--forest);
+}
+.eyebrow::before {
+  content: "";
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--green);
 }
 
-section { padding: 88px 0; border-top: 1px solid var(--line); }
+.lede {
+  font-size: var(--step-1);
+  color: var(--ink-2);
+  max-width: 60ch;
+}
+
+/* Quiet sentence-level text: help copy, notes, the footer role line. */
+.meta {
+  font-size: var(--step--1);
+  color: var(--ink-2);
+  letter-spacing: 0;
+  text-transform: none;
+  font-weight: 400;
+}
+/* A figcaption carrying .meta is still a caption. */
+figcaption.meta {
+  font-size: var(--step-label);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Numbers are tabular everywhere. */
+.num {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* A headline number: Newsreader, never bold. */
+.figure-num {
+  font-family: var(--display);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+  line-height: 1.05;
+}
+
+/* --------------------------------------------------- handwritten note ----- */
+
+/* Caveat, forest ink, a couple of degrees off true. Short margin notes only:
+   two to six words, at most one or two per page. Never a heading or a button. */
+.hand {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--hand);
+  font-weight: 600;
+  font-size: clamp(1.15rem, 1rem + 0.5vw, 1.45rem);
+  line-height: 1.1;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--forest);
+  transform: rotate(-2deg);
+}
+.hand svg { flex: none; }
+.green .hand,
+.dark .hand { color: var(--green); }
+
+/* Visible marker for content still to be filled in. */
+.ph {
+  color: var(--ink-2);
+  font-style: italic;
+  text-decoration: underline dotted var(--rule-strong);
+  text-underline-offset: 3px;
+}
+
+.slot {
+  display: grid;
+  place-items: center;
+  min-height: 190px;
+  padding: 24px;
+  border: 2px dashed var(--rule-dash);
+  border-radius: var(--r-sm);
+  background: var(--panel);
+  text-align: center;
+  color: var(--ink-2);
+  font-size: var(--step--1);
+  line-height: 1.55;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 10;
+  padding: 12px 18px;
+  border-radius: 0 0 var(--r-sm) 0;
+  background: var(--ink);
+  color: var(--on-dark);
+  font-weight: 500;
+}
+.skip-link:focus { left: 0; }
+
+/* --------------------------------------------------------- buttons -------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 12px 24px;
+  border: 1px solid var(--ink);
+  border-radius: var(--r-pill);
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: 0.9375rem;
+  letter-spacing: 0;
+  text-decoration: none;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  transition: background-color 120ms ease, color 120ms ease, border-color 120ms ease;
+}
+.btn.solid {
+  background: var(--ink);
+  color: #fff;
+  border-color: var(--ink);
+}
+.btn:hover { background: var(--ink); color: #fff; }
+.btn.solid:hover { background: #332f29; border-color: #332f29; }
+.btn:focus-visible { border-radius: var(--r-pill); }
+.btn-row { display: flex; flex-wrap: wrap; gap: 12px; }
+
+/* Buttons on a forest bento. */
+.green .btn { border-color: var(--on-dark); color: var(--on-dark); background: transparent; }
+.green .btn:hover { background: var(--on-dark); color: var(--forest); }
+.green .btn.solid { background: var(--on-dark); color: var(--forest); border-color: var(--on-dark); }
+
+/* --------------------------------------------------------- stats ---------- */
+
+.stats {
+  display: grid;
+  gap: clamp(18px, 3vw, 32px);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+@media (min-width: 620px) {
+  .stats { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+}
+.stats > li {
+  border-top: 1px solid var(--rule-strong);
+  padding-top: 12px;
+}
+.green .stats > li { border-top-color: var(--on-dark-rule); }
+.stats .stat-value {
+  display: block;
+  margin-top: 8px;
+  font-family: var(--display);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+  font-size: clamp(1.7rem, 1.2rem + 1.8vw, 2.4rem);
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+  color: var(--ink);
+  text-transform: none;
+}
+.green .stats .stat-value { color: var(--on-dark); }
+
+/* --------------------------------------------------------- downloads ------ */
+
+.files { list-style: none; padding: 0; margin: 0; }
+.files > li + li { border-top: 1px solid var(--rule); }
+.files a {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35em 0.75em;
+  padding: 14px 0;
+  text-decoration: none;
+}
+.files a:hover .file-name { text-decoration: underline 2px var(--forest); text-underline-offset: 3px; }
+.file-name { font-weight: 500; }
+
+/* --------------------------------------------------------- dark band ------ */
+
+.dark {
+  background: var(--ink);
+  color: var(--on-dark);
+}
+.dark .lede, .dark p { color: var(--on-dark-2); }
+.dark h1, .dark h2, .dark h3, .dark strong { color: var(--on-dark); }
+.dark .eyebrow { color: var(--on-dark); }
+.dark .meta, .dark figcaption, .dark .file-kind { color: var(--on-dark-2); }
+.dark a { text-decoration-color: var(--green); }
+.dark :where(a, button):focus-visible { outline-color: var(--green); }
+.dark code { background: rgba(255, 255, 255, 0.1); color: var(--on-dark); }
+
+.dark .btn { border-color: var(--on-dark); color: var(--on-dark); background: transparent; }
+.dark .btn:hover { background: var(--on-dark); color: var(--ink); }
+.dark .btn.solid { background: var(--on-dark); color: var(--ink); border-color: var(--on-dark); }
+.dark .card {
+  background: #272420;
+  border-color: var(--on-dark-rule);
+}
+.dark .slot {
+  background: #272420;
+  border-color: var(--on-dark-rule);
+  color: var(--on-dark-2);
+}
+.dark .stats > li { border-top-color: var(--on-dark-rule); }
+.dark .stats .stat-value { color: var(--on-dark); }
+
+/* --------------------------------------------------------- motion --------- */
+
+/* Bentos and sections fade up as they enter the viewport, once each. The
+   hidden start state applies only while the observer is running
+   (html.reveal-ready), so with JavaScript off everything is simply visible. */
+.reveal-ready [data-reveal] {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 450ms ease-out var(--reveal-delay, 0ms),
+    transform 450ms ease-out var(--reveal-delay, 0ms);
+}
+.reveal-ready [data-reveal].is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-ready [data-reveal],
+  .reveal-ready [data-reveal].is-revealed {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  a.bento:hover,
+  a.card:hover { transform: none; }
+}

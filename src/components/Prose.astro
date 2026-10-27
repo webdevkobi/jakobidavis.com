@@ -1,0 +1,17 @@
+---
+/**
+ * Renders a frontmatter prose block. Blank lines become paragraphs.
+ */
+interface Props {
+  text: string;
+}
+
+const paragraphs = Astro.props.text
+  .split(/\n\s*\n/)
+  .map((p) => p.trim())
+  .filter(Boolean);
+---
+
+<div class="prose">
+  {paragraphs.map((p) => <p>{p}</p>)}
+</div>

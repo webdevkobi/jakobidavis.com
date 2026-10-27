@@ -1,16 +1,26 @@
 ---
 import "../styles/global.css";
+import site from "../data/site.json";
+import CopyEmail from "../components/CopyEmail.astro";
 
 interface Props {
-  title?: string;
-  description?: string;
+  title: string;
+  description: string;
+  /** Set on the homepage so the <title> is not "Jakobi Davis | Jakobi Davis". */
+  bareTitle?: boolean;
 }
 
-const {
-  title = "Jakobi Davis",
-  description = "Engineer, former pro pitcher, and founder of Champions Voice.",
-} = Astro.props;
+const { title, description, bareTitle = false } = Astro.props;
+
+const pageTitle = bareTitle ? title : `${title} | ${site.name}`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL("/og-image.png", Astro.site);
+const path = Astro.url.pathname;
+
+const isCurrent = (href: string) =>
+  href === "/" ? path === "/" : path === href || path.startsWith(href);
+
+const year = new Date().getFullYear();
 ---
 
 <!doctype html>
@@ -18,22 +28,271 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{title}</title>
+    <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta property="og:title" content={title} />
+
+    {/* From logo/head-snippet.html, with the domain filled in. */}
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#f6f3ec" />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    {/* Newsreader for headings, Inter for everything else: both preloaded.
+        Caveat is the handwritten accent, so it loads without the preload. */}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500;600&display=swap"
-      rel="stylesheet"
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Newsreader:opsz,wght@6..72,500&display=swap"
     />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Newsreader:opsz,wght@6..72,500&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&display=swap"
+    />
+
+    {/* Set before first paint so the reveal start state never flashes in.
+        Without JavaScript the class is absent and every section is visible. */}
+    <script is:inline>
+      if (
+        "IntersectionObserver" in window &&
+        !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ) {
+        document.documentElement.classList.add("reveal-ready");
+      }
+    </script>
   </head>
+
   <body>
-    <slot />
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-head">
+      <div class="wrap head-inner">
+        <a href="/" class="brand" aria-label={`${site.name}, home`}>
+          <img
+            class="brand-wordmark"
+            src="/logo/wordmark.svg"
+            alt={site.name}
+            width="579"
+            height="83"
+          />
+          <img
+            class="brand-mark"
+            src="/logo/jd-mark.svg"
+            alt={site.name}
+            width="80"
+            height="48"
+          />
+        </a>
+
+        <nav aria-label="Main">
+          <ul>
+            {
+              site.nav.map((item) => (
+                <li>
+                  <a href={item.href} aria-current={isCurrent(item.href) ? "page" : undefined}>
+                    {item.label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <footer class="site-foot dark">
+      <div class="wrap foot-inner">
+        <div class="foot-brand">
+          <img
+            src="/logo/wordmark-reversed.svg"
+            alt={site.name}
+            width="579"
+            height="83"
+          />
+          <p class="meta">{site.roleLine}</p>
+        </div>
+
+        <nav class="foot-nav" aria-label="Footer">
+          <ul>
+            {site.nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+          </ul>
+          <ul>
+            {/* Plain text, not a mailto: Safari hands mailto links off to a
+                stale webmail page, so the address is here to be copied. */}
+            <li><CopyEmail email={site.email} textClass="foot-email" /></li>
+            <li><a href={site.linkedin}>LinkedIn</a></li>
+            <li><a href={site.github}>GitHub</a></li>
+            <li>
+              <a href={site.championsVoice} rel="noopener">Champions Voice</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+
+      <div class="wrap foot-base">
+        <p class="meta">&copy; {year} {site.name}</p>
+      </div>
+    </footer>
+
+    <script>
+      /* Reveal on enter: fade up 14px, once per element, 60ms stagger between
+         boxes that share a parent. No library, and nothing above the fold
+         depends on it, because the observer fires on the first frame for
+         anything already in view. */
+      const targets = document.querySelectorAll<HTMLElement>("[data-reveal]");
+
+      if (targets.length) {
+        const order = new Map<Element, number>();
+        for (const el of targets) {
+          const parent = el.parentElement;
+          if (!parent) continue;
+          const n = order.get(parent) ?? 0;
+          el.style.setProperty("--reveal-delay", `${Math.min(n, 5) * 60}ms`);
+          order.set(parent, n + 1);
+        }
+
+        const observer = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (!entry.isIntersecting) continue;
+              entry.target.classList.add("is-revealed");
+              observer.unobserve(entry.target);
+            }
+          },
+          { rootMargin: "0px 0px -8% 0px", threshold: 0.05 },
+        );
+
+        for (const el of targets) observer.observe(el);
+      }
+    </script>
   </body>
 </html>
+
+<style>
+  /* The header sits straight on the graph paper. A hairline keeps it seated. */
+  .site-head {
+    background: transparent;
+    border-bottom: 1px solid var(--rule);
+  }
+  .head-inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px 28px;
+    padding-block: 20px;
+  }
+
+  .brand {
+    display: block;
+    flex: none;
+    text-decoration: none;
+  }
+  /* Wordmark on the light header. The compact mark takes over on narrow screens. */
+  .brand-wordmark { width: 168px; height: auto; }
+  .brand-mark { display: none; width: 44px; height: auto; }
+  @media (max-width: 430px) {
+    .brand-wordmark { display: none; }
+    .brand-mark { display: block; }
+  }
+
+  nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 18px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  /* Nav items are small labels: uppercase, tracked out, medium. */
+  .head-inner nav a {
+    display: inline-block;
+    padding: 5px 0;
+    font-size: var(--step-label);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--ink-2);
+  }
+  .head-inner nav a:hover { color: var(--ink); }
+  .head-inner nav a[aria-current="page"] {
+    color: var(--ink);
+    box-shadow: inset 0 -2px 0 0 var(--green);
+  }
+
+  .site-foot { margin-top: clamp(56px, 9vw, 104px); }
+  .foot-inner {
+    display: grid;
+    gap: 36px;
+    padding-top: clamp(40px, 6vw, 64px);
+    padding-bottom: 36px;
+  }
+  @media (min-width: 760px) {
+    .foot-inner { grid-template-columns: 1fr auto; gap: 56px; }
+  }
+  .foot-brand img { width: 190px; height: auto; }
+  .foot-brand .meta { margin-top: 14px; max-width: 34ch; }
+
+  .foot-nav { display: flex; flex-wrap: wrap; gap: 28px 56px; }
+  .foot-nav ul {
+    display: grid;
+    align-content: start;
+    gap: 10px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .foot-nav a {
+    font-size: 0.925rem;
+    text-decoration: none;
+    color: var(--on-dark-2);
+  }
+  /* The page-links column reads as labels. The contact column keeps its
+     real casing, because an email address should look like one. */
+  .foot-nav ul:first-child a {
+    font-size: var(--step-label);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  /* Matches .foot-nav a so the unlinked address sits in line with the column. */
+  .foot-email {
+    font-size: 0.925rem;
+    color: var(--on-dark-2);
+    user-select: all;
+  }
+  .foot-nav a:hover {
+    color: var(--on-dark);
+    text-decoration: underline 2px var(--green);
+    text-underline-offset: 3px;
+  }
+
+  .foot-base {
+    border-top: 1px solid var(--on-dark-rule);
+    padding-block: 22px;
+  }
+</style>

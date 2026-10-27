@@ -1,0 +1,74 @@
+---
+import Base from "../layouts/Base.astro";
+import site from "../data/site.json";
+import Value from "../components/Value.astro";
+
+const title = "Resume";
+const description =
+  "Download or read the resume for Jakobi Davis, energy systems engineer, Cornell Civil Engineering.";
+---
+
+<Base title={title} description={description}>
+  <section class="section">
+    <div class="wrap">
+      <p class="eyebrow">Resume</p>
+      <h1>One page, kept current.</h1>
+      <p class="lede">
+        The long form of the project work is on the{" "}
+        <a href="/projects/">projects page</a>.
+      </p>
+
+      <p class="updated meta">
+        Updated: <Value value={site.resumeUpdated} />
+      </p>
+
+      <div class="btn-row">
+        <a class="btn solid" href="/resume.pdf" download>Download the PDF</a>
+        <a class="btn" href="/resume.pdf">Open in a new tab</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap" data-reveal>
+      <h2>Read it here.</h2>
+      <div class="viewer">
+        <object data="/resume.pdf" type="application/pdf" aria-label="Resume, PDF">
+          <p class="fallback">
+            This browser will not display the PDF inline.
+            <a href="/resume.pdf">Download the resume</a> instead.
+          </p>
+        </object>
+      </div>
+      <p class="meta note">
+        One page. If the viewer above does not load, the download button has the
+        same file.
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .updated { margin: 1.5em 0 1.5em; }
+
+  .viewer {
+    border-radius: var(--r-sm);
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    overflow: hidden;
+  }
+  .viewer object {
+    display: block;
+    width: 100%;
+    height: min(80vh, 900px);
+    border: 0;
+  }
+  /* Phones generally will not render an inline PDF, so the buttons above are
+     the real path there. */
+  @media (max-width: 620px) {
+    .viewer object { height: 60vh; }
+  }
+  .fallback { padding: 28px; }
+
+  .note { margin-top: 14px; }
+</style>

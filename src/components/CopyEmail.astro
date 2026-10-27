@@ -1,0 +1,160 @@
+---
+interface Props {
+  email: string;
+  /** Class applied to the address itself, so each caller keeps its own type. */
+  textClass?: string;
+}
+
+const { email, textClass = "" } = Astro.props;
+---
+
+{/* The address stays plain text (see the note in Base.astro); the button is
+    the convenience on top. It renders hidden and is shown by the script, so
+    nobody without a working clipboard sees a button that does nothing. */}
+<span class="copy-email">
+  <span class:list={[textClass]} data-copy-text>{email}</span>
+  <button type="button" class="copy-btn" data-copy-btn={email} hidden>
+    <svg
+      class="copy-icon"
+      width="13"
+      height="13"
+      viewBox="0 0 16 16"
+      fill="none"
+      aria-hidden="true"
+    >
+      <rect x="5.5" y="5.5" width="9" height="9" rx="2" stroke="currentColor" stroke-width="1.5" />
+      <path
+        d="M11 3.5A2 2 0 009 1.5H3.5a2 2 0 00-2 2V9a2 2 0 002 2"
+        stroke="currentColor"
+        stroke-width="1.5"
+        stroke-linecap="round"
+      />
+    </svg>
+    <span class="copy-label" data-copy-label>Copy</span>
+  </button>
+  <span class="vh" role="status" aria-live="polite" data-copy-status></span>
+</span>
+
+<script>
+  const DONE = "Copied";
+  const IDLE = "Copy";
+
+  for (const btn of document.querySelectorAll<HTMLButtonElement>("[data-copy-btn]")) {
+    if (!navigator.clipboard) continue;
+    btn.hidden = false;
+
+    const wrap = btn.closest(".copy-email");
+    const label = btn.querySelector<HTMLElement>("[data-copy-label]");
+    const status = wrap?.querySelector<HTMLElement>("[data-copy-status]");
+    let timer: number | undefined;
+
+    btn.setAttribute("aria-label", `Copy email address ${btn.dataset.copyBtn}`);
+
+    /** Select the address so the copy is one keystroke away. */
+    function selectAddress() {
+      const text = wrap?.querySelector("[data-copy-text]");
+      if (!text) return false;
+      const range = document.createRange();
+      range.selectNodeContents(text);
+      const sel = window.getSelection();
+      sel?.removeAllRanges();
+      sel?.addRange(range);
+      return true;
+    }
+
+    btn.addEventListener("click", async () => {
+      const value = btn.dataset.copyBtn ?? "";
+
+      // writeText can reject, and in some embedded views it never settles at
+      // all. A button that silently does nothing is worse than no button, so
+      // the wait is bounded and anything other than a clean resolve falls
+      // back to selecting the address.
+      const wrote = await Promise.race([
+        navigator.clipboard.writeText(value).then(
+          () => true,
+          () => false,
+        ),
+        new Promise<boolean>((resolve) => setTimeout(() => resolve(false), 1000)),
+      ]);
+
+      if (!wrote) {
+        const selected = selectAddress();
+        let copied = false;
+        try {
+          copied = selected && document.execCommand("copy");
+        } catch {
+          copied = false;
+        }
+        if (!copied) {
+          if (status) status.textContent = "Select the address and copy it";
+          return;
+        }
+      }
+
+      btn.classList.add("is-done");
+      if (label) label.textContent = DONE;
+      if (status) status.textContent = `${value} copied to clipboard`;
+
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => {
+        btn.classList.remove("is-done");
+        if (label) label.textContent = IDLE;
+        if (status) status.textContent = "";
+      }, 2000);
+    });
+  }
+</script>
+
+<style>
+  .copy-email {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  /* Inherits its colour from whatever it sits on, so one button works on
+     both the paper contact page and the dark footer. */
+  .copy-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 2px 8px;
+    border: 1px solid currentColor;
+    border-radius: var(--r-pill);
+    background: transparent;
+    color: inherit;
+    opacity: 0.6;
+    font-family: var(--sans);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    line-height: 1.6;
+    cursor: pointer;
+    transition: opacity 120ms ease-out;
+  }
+  .copy-btn:hover,
+  .copy-btn:focus-visible { opacity: 1; }
+  .copy-btn.is-done { opacity: 1; }
+  .copy-icon { flex: none; }
+  .copy-btn.is-done .copy-icon { display: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .copy-btn { transition: none; }
+  }
+
+  /* Visually hidden, still announced. */
+  .vh {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+</style>

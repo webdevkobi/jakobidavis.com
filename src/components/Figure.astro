@@ -1,0 +1,34 @@
+---
+interface Props {
+  src?: string;
+  alt: string;
+  caption: string;
+}
+
+const { src, alt, caption } = Astro.props;
+---
+
+{/* No figure, no frame. A project without an image renders nothing here
+    rather than an empty slot: the authoring reminder used to sit in the
+    markup and shipped to readers. Set `figure.src` in the project's markdown
+    file and the figure appears. */}
+{
+  src && (
+    <figure>
+      <img src={src} alt={alt} loading="lazy" decoding="async" />
+      <figcaption class="meta">{caption}</figcaption>
+    </figure>
+  )
+}
+
+<style>
+  figure { margin: 0; }
+  figure img {
+    width: 100%;
+    height: auto;
+    border-radius: var(--r-sm);
+    background: var(--panel);
+    border: 1px solid var(--rule);
+  }
+  figcaption { margin-top: 12px; }
+</style>

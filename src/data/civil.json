@@ -1,0 +1,24 @@
+[
+  {
+    "course": "CEE 3410",
+    "title": "Albany Street Bridge geotechnical report",
+    "line": "Geotechnical findings for the Albany Street Bridge, summarized for a city council audience.",
+    "role": "Individual case study.",
+    "pdf": "/papers/civil-albany-street-bridge-report.pdf",
+    "note": "Class assignment written in the role of a licensed PE, as required by the course. I hold the FE, not the PE."
+  },
+  {
+    "course": "CEE 3410",
+    "title": "Rammed earth column soil specification",
+    "line": "Soil specification for rammed earth columns at Hollister Hall.",
+    "role": "Individual case study.",
+    "pdf": "/papers/civil-rammed-earth-columns-memo.pdf"
+  },
+  {
+    "course": "Cornell Geotechnical Seminar",
+    "title": "Freeze-thaw effects on Alaska's Dalton Highway",
+    "line": "Team presentation on freeze-thaw damage along the Dalton Highway.",
+    "role": "Project lead on a five-person team. I presented it.",
+    "pdf": "/papers/civil-alaska-freeze-thaw-slides.pdf"
+  }
+]

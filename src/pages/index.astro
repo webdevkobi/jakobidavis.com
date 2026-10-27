@@ -1,216 +1,280 @@
 ---
 import Base from "../layouts/Base.astro";
+import site from "../data/site.json";
 
-// Edit this content freely. Everything on the page pulls from here.
-const lanes = [
-  {
-    tag: "Engineer",
-    title: "Civil engineering, renewable energy",
-    body: "Cornell Civil Engineering graduate focused on renewable energy systems. FE-certified, Dean's List, after starting freshman year with a 2.7 GPA.",
-  },
-  {
-    tag: "Athlete",
-    title: "Division I captain to pro ball",
-    body: "Four-year starter and two-year captain at Cornell. Holds the program's career strikeout record. Pitched in the MLB Draft League and the Frontier League.",
-  },
-  {
-    tag: "Founder",
-    title: "Champions Voice",
-    body: "Building systems that help student-athletes ages 15 to 25 win in the classroom, in recruiting, and in life.",
-  },
-];
-
-const highlights = [
-  { stat: "#1", label: "Cornell career strikeouts" },
-  { stat: "2x", label: "Team captain" },
-  { stat: "FE", label: "Certified engineer-in-training" },
-  { stat: "52", label: "Countries visited" },
-];
-
-const projects = [
-  {
-    name: "Champions Voice",
-    blurb: "Academic, recruiting, and life systems for student-athletes.",
-    href: "#",
-  },
-  {
-    name: "The Student Athlete Playbook",
-    blurb: "A book on building the habits that carry athletes past their playing days.",
-    href: "#",
-  },
-  {
-    name: "Engineering work",
-    blurb: "Renewable energy capstone and selected technical projects. Add case studies here.",
-    href: "#",
-  },
-];
+const title = "Jakobi Davis, energy systems engineer";
+const description =
+  "Energy systems engineer, author, and founder. Capacity expansion, storage economics, and life cycle assessment from Cornell, plus a carbon price model.";
 ---
 
-<Base>
-  <header class="nav wrap">
-    <a href="/" class="logo">Jakobi Davis</a>
-    <nav>
-      <a href="#about">About</a>
-      <a href="#work">Work</a>
-      <a href="#speaking">Speaking</a>
-      <a href="#contact">Contact</a>
-    </nav>
-  </header>
+<Base title={title} description={description} bareTitle>
+  <section class="hero">
+    <div class="wrap hero-inner">
+      <h1 class="hero-head">
+        The next question won&rsquo;t be how to power it. It&rsquo;ll be which
+        renewable to build it with.
+      </h1>
 
-  <main>
-    <div class="hero wrap">
-      <p class="eyebrow">Engineer · Athlete · Founder</p>
-      <h1>I build systems that help people perform.</h1>
-      <p class="lede">
-        Cornell engineer, former professional pitcher, and founder of Champions Voice.
-        Based in Atlanta.
-      </p>
-      <div class="cta">
-        <a class="btn primary" href="#contact">Get in touch</a>
-        <a class="btn" href="#work">See the work</a>
+      <div class="hero-copy">
+        <div class="subhead-row">
+          <p class="lede subhead">
+            I study the energy transition piece by piece: the policy, the
+            economics, and whether it can actually get built. I want renewables
+            modular enough to drop into anything new, from a data center to a
+            small business.
+          </p>
+          {/* The one handwritten note on this page. */}
+          <p class="hand note-work" aria-hidden="true">
+            <svg width="30" height="26" viewBox="0 0 30 26" fill="none" aria-hidden="true">
+              <path
+                d="M28 23C21 23 11.5 20 6 13.5 4.2 11.4 3 8.6 2.5 5"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
+              <path
+                d="M2.5 5 1.5 11M2.5 5l5 2.2"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
+            </svg>
+            <span>this is the work</span>
+          </p>
+        </div>
+
+        <figure class="bento green finding">
+          <p class="label">The finding</p>
+          <blockquote>
+            <p>
+              <span class="figure-num">$55</span> a ton gets New York to 70%
+              renewables in an average year. Guaranteeing it takes{" "}
+              <span class="figure-num">$120</span>.
+            </p>
+          </blockquote>
+          <figcaption class="meta">
+            CEE 4880 capstone, NYISO capacity expansion under a carbon tax
+          </figcaption>
+        </figure>
+
+        <div class="btn-row">
+          <a class="btn solid" href="/projects/">Projects</a>
+          <a class="btn" href="/resume/">Resume</a>
+          <a class="btn" href={site.calcomDiscovery} rel="noopener">Book a call</a>
+        </div>
+      </div>
+
+      {/* The cutout stands in a sage panel that covers its bottom three
+          quarters, so the crop at the legs reads as the edge of the panel.
+          Head and shoulders clear the top of the panel onto bare paper. */}
+      <div class="hero-photo">
+        <div class="hero-stage">
+          <div class="hero-panel" aria-hidden="true"></div>
+          <img
+            src="/images/hero-cutout.webp"
+            alt="Jakobi Davis speaking on stage"
+            width="778"
+            height="1164"
+            fetchpriority="high"
+            decoding="async"
+          />
+        </div>
       </div>
     </div>
+  </section>
 
-    <section id="about">
-      <div class="wrap">
-        <p class="eyebrow">About</p>
-        <h2>Three lanes, one standard.</h2>
-        <div class="grid three">
-          {lanes.map((l) => (
-            <article class="card">
-              <p class="tag">{l.tag}</p>
-              <h3>{l.title}</h3>
-              <p>{l.body}</p>
-            </article>
-          ))}
-        </div>
-        <div class="stats">
-          {highlights.map((h) => (
-            <div>
-              <strong>{h.stat}</strong>
-              <span>{h.label}</span>
-            </div>
-          ))}
-        </div>
+  <section class="section plain">
+    <div class="wrap">
+      <div class="bento intro-bento" data-reveal>
+        <p class="eyebrow">What I work on</p>
+        <h2>Three tracks, one question.</h2>
       </div>
-    </section>
 
-    <section id="work">
-      <div class="wrap">
-        <p class="eyebrow">Work</p>
-        <h2>What I'm building.</h2>
-        <div class="grid three">
-          {projects.map((p) => (
-            <a class="card link" href={p.href}>
-              <h3>{p.name}</h3>
-              <p>{p.blurb}</p>
-              <span class="arrow">→</span>
-            </a>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    <section id="speaking">
-      <div class="wrap split">
-        <div>
-          <p class="eyebrow">Speaking</p>
-          <h2>From a 2.7 GPA to class speaker.</h2>
-        </div>
-        <div>
-          <p>
-            Graduating class speaker for Cornell Engineering and Cornell Peer Mentor of the Year.
-            I speak to students, athletes, and schools about building systems that hold up
-            under pressure.
+      <div class="work-grid">
+        <a class="bento green work-card is-wide" href="/projects/" data-reveal>
+          <p class="label">Energy systems</p>
+          <h3>
+            Five projects, each carried all the way to a number and its limits.
+          </h3>
+          <p class="summary">
+            Capacity expansion, storage economics, and life cycle assessment,
+            written up with the assumptions that produced each result.
           </p>
-          <a class="btn primary" href="#contact">Book a talk</a>
-        </div>
-      </div>
-    </section>
+          <p class="go">All five projects</p>
+        </a>
 
-    <section id="contact">
-      <div class="wrap">
-        <p class="eyebrow">Contact</p>
-        <h2>Let's talk.</h2>
-        <p class="lede">
-          <a href="mailto:hello@jakobidavis.com">hello@jakobidavis.com</a>
-        </p>
-      </div>
-    </section>
-  </main>
+        <a class="bento work-card" href="/models/" data-reveal>
+          <p class="label">Models you can run</p>
+          <h3>A carbon price you can move.</h3>
+          <p class="summary">
+            A slider built on my capstone results, so the finding above is
+            something you pull rather than read.
+          </p>
+          <p class="go">Open the model</p>
+        </a>
 
-  <footer class="wrap">
-    <p>© {new Date().getFullYear()} Jakobi Davis</p>
-  </footer>
+        <a class="bento work-card" href="/writing/" data-reveal>
+          <p class="label">Writing and speaking</p>
+          <h3>A book, a commencement address, keynotes.</h3>
+          <p class="summary">
+            The Student-Athlete Playbook, plus the graduating class address for
+            Cornell Engineering.
+          </p>
+          <p class="go">Writing and speaking</p>
+        </a>
+      </div>
+    </div>
+  </section>
 </Base>
 
 <style>
-  .nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 24px;
-    padding-bottom: 24px;
-    gap: 16px;
-    flex-wrap: wrap;
-  }
-  .logo { font-family: var(--serif); font-weight: 700; font-size: 1.2rem; text-decoration: none; }
-  nav { display: flex; gap: 22px; flex-wrap: wrap; }
-  nav a { text-decoration: none; color: var(--ink-soft); font-weight: 500; font-size: 0.95rem; }
-  nav a:hover { color: var(--gold); }
-
-  .hero { padding-top: 96px; padding-bottom: 112px; }
-  .hero h1 { max-width: 15ch; }
-  .lede { font-size: 1.2rem; color: var(--ink-soft); max-width: 52ch; }
-  .cta { display: flex; gap: 12px; margin-top: 32px; flex-wrap: wrap; }
-
-  .btn {
-    display: inline-block;
-    padding: 12px 22px;
-    border-radius: 999px;
-    border: 1px solid var(--line);
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 0.95rem;
-  }
-  .btn.primary { background: var(--gold); border-color: var(--gold); color: #0f1a2b; }
-  .btn:hover { transform: translateY(-1px); }
-
-  .grid { display: grid; gap: 20px; margin-top: 36px; }
-  .three { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
-  .card {
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: 16px;
-    padding: 28px;
-    position: relative;
-  }
-  .card p { color: var(--ink-soft); margin: 0; }
-  .card.link { text-decoration: none; transition: border-color 0.2s; }
-  .card.link:hover { border-color: var(--gold); }
-  .card.link h3 { padding-right: 24px; }
-  .arrow { position: absolute; top: 24px; right: 24px; color: var(--gold); }
-  .tag {
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--gold) !important;
-    margin-bottom: 12px !important;
-  }
-
-  .stats {
+  /* The hero sits on bare graph paper. No box behind the words; its only
+     bentos are the finding and the photo. Padding matches the bento gutter
+     plus the bento padding below, so the headline lines up with the headings
+     in the boxes. */
+  .hero { padding-inline: var(--gutter); }
+  .hero-inner {
+    --hero-pb: clamp(32px, 5vw, 56px);
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 20px;
-    margin-top: 56px;
+    gap: clamp(28px, 4vw, 44px);
+    padding-inline: var(--bento-pad);
+    padding-top: clamp(32px, 5vw, 60px);
+    padding-bottom: var(--hero-pb);
   }
-  .stats strong { display: block; font-family: var(--serif); font-size: 2.6rem; color: var(--gold); }
-  .stats span { color: var(--ink-soft); font-size: 0.95rem; }
+  /* The headline runs the full width so it lands on two lines, then the copy
+     and the photo split the row underneath it. */
+  @media (min-width: 920px) {
+    .hero-inner {
+      grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+      grid-template-areas:
+        "head head"
+        "copy photo";
+      column-gap: clamp(40px, 5vw, 64px);
+      align-items: end;
+    }
+    .hero-head { grid-area: head; }
+    .hero-copy { grid-area: copy; }
+    .hero-photo { grid-area: photo; }
+  }
 
-  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
-  .split p { color: var(--ink-soft); margin-top: 0; }
-  @media (max-width: 760px) { .split { grid-template-columns: 1fr; gap: 8px; } }
+  /* Sized so the sentence breaks into two lines at the wrap width. */
+  .hero-head {
+    margin: 0;
+    font-size: clamp(2.05rem, 1rem + 3.5vw, 3rem);
+    line-height: 1.1;
+  }
 
-  footer { padding-top: 32px; padding-bottom: 48px; color: var(--ink-soft); font-size: 0.9rem; }
+  /* The handwritten note sits in the margin beside the subhead on desktop,
+     and tucks under it on phones. */
+  .subhead-row {
+    display: grid;
+    gap: 10px 18px;
+    margin-bottom: clamp(26px, 4vw, 38px);
+  }
+  @media (min-width: 640px) {
+    .subhead-row {
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: end;
+    }
+  }
+  .subhead { margin: 0; max-width: 60ch; }
+  .note-work { margin: 0; align-self: end; }
+  .note-work svg { transform: scaleX(-1); }
+  @media (min-width: 640px) {
+    .note-work svg { transform: none; }
+  }
+
+  /* The capstone finding is the hero callout, and it is a renewable energy
+     finding, so it gets the forest bento. */
+  .finding {
+    margin: 0 0 clamp(26px, 4vw, 36px);
+    max-width: 42ch;
+  }
+  .finding blockquote { margin: 0.7em 0 0; }
+  .finding blockquote p {
+    font-family: var(--display);
+    font-size: clamp(1.3rem, 1rem + 1.5vw, 1.9rem);
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--on-dark);
+    text-wrap: balance;
+  }
+  .finding .figure-num { font-size: 1.18em; }
+  .finding figcaption { margin-top: 16px; }
+
+  /* The photo column bottom lines up with the button row on the left, which
+     the grid handles with align-items: end. */
+  .hero-photo {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+  }
+
+  /* The stage is exactly the image box. Rounding only the bottom corners and
+     hiding overflow clips the photo to the panel's bottom edge, while leaving
+     the head and shoulders free to rise above the panel's top. */
+  .hero-stage {
+    position: relative;
+    width: 100%;
+    max-width: 300px;
+    overflow: hidden;
+    border-radius: 0 0 var(--r) var(--r);
+  }
+  .hero-panel {
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 75%;
+    border-radius: var(--r);
+    background: var(--green);
+  }
+  .hero-stage img {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: auto;
+  }
+  @media (min-width: 920px) {
+    .hero-photo { justify-content: flex-end; }
+    .hero-stage { max-width: min(100%, 430px); }
+  }
+
+  /* The work bento grid: mixed sizes on desktop, one column on phones. */
+  .intro-bento { margin-bottom: clamp(14px, 2vw, 22px); }
+  .intro-bento h2 { margin: 0; max-width: 20ch; }
+
+  .work-grid {
+    display: grid;
+    gap: clamp(14px, 2vw, 22px);
+  }
+  @media (min-width: 820px) {
+    .work-grid { grid-template-columns: repeat(2, 1fr); }
+    .work-grid .is-wide { grid-row: span 2; }
+  }
+
+  .work-card {
+    display: grid;
+    grid-template-rows: auto auto 1fr auto;
+    gap: 0;
+    align-content: start;
+  }
+  .work-card h3 { margin: 12px 0 0.6em; }
+  .work-card .summary { color: var(--ink-2); }
+  .work-card.green .summary { color: var(--on-dark-2); }
+  .work-card .go {
+    margin-top: 22px;
+    font-size: var(--step-label);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--forest);
+  }
+  .work-card .go::after { content: " \2192"; }
+  /* Brand green is 3.3:1 on forest, too low for an 11px label, so the link
+     line on the forest card is white. */
+  .work-card.green .go { color: var(--on-dark); }
+  .work-card.is-wide h3 {
+    font-size: var(--step-3);
+    max-width: 22ch;
+  }
 </style>

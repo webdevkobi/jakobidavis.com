@@ -1,0 +1,267 @@
+---
+import Base from "../layouts/Base.astro";
+import CopyEmail from "../components/CopyEmail.astro";
+import site from "../data/site.json";
+
+const title = "Contact";
+const description =
+  "Reach Jakobi Davis by email at career@jakobidavis.com, on LinkedIn or GitHub, or book a call directly.";
+
+// Two ways to book. The href is the real booking page, so if the Cal embed
+// script never loads the button is still a working link; when it does load,
+// Cal intercepts the click on data-cal-link and opens the modal instead.
+const calls = [
+  {
+    label: "Discovery Call",
+    length: "30 min",
+    href: site.calcomDiscovery,
+    calLink: "jakobidavis/discovery",
+    note: "job opportunities + project work",
+    tilt: "-3deg",
+  },
+  {
+    label: "Quick Chat",
+    length: "15 min",
+    href: "https://cal.com/jakobidavis/chat",
+    calLink: "jakobidavis/chat",
+    note: "informal intro, more humans in the network",
+    tilt: "2deg",
+  },
+];
+---
+
+<Base title={title} description={description}>
+  <section class="section">
+    <div class="wrap">
+      <p class="eyebrow">Contact</p>
+      <h1>Email for anything specific. Book a time to talk.</h1>
+      <p class="lede">
+        Both routes reach me. The booking link is the faster one for a first
+        conversation.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap" data-reveal>
+      <div class="columns">
+        <div>
+          <h2>Direct.</h2>
+          <ul class="links">
+            <li>
+              <span class="file-kind">Email</span>
+              {/* Not a mailto. See the note in Base.astro. */}
+              <CopyEmail email={site.email} textClass="email" />
+            </li>
+            <li>
+              <span class="file-kind">LinkedIn</span>
+              <a href={site.linkedin}>linkedin.com/in/jakobi-davis</a>
+            </li>
+            <li>
+              <span class="file-kind">GitHub</span>
+              <a href={site.github}>github.com/webdevkobi</a>
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <h2>Book a call.</h2>
+          <ul class="calls">
+            {
+              calls.map((call) => (
+                <li class="call" style={`--tilt: ${call.tilt}`}>
+                  <a
+                    class="btn solid call-btn"
+                    href={call.href}
+                    data-cal-link={call.calLink}
+                    data-cal-config='{"layout":"month_view"}'
+                    target="_blank"
+                    rel="noopener"
+                  >
+                    {call.label} <span class="sep">·</span> {call.length}
+                  </a>
+
+                  {/* Decorative: the arrow and the note repeat what the
+                      button already says, so screen readers skip them. */}
+                  <p class="hand call-note" aria-hidden="true">
+                    <svg
+                      class="arrow arrow-side"
+                      viewBox="0 0 56 32"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M52 6.5c-5.4-2.1-12.8-2.6-20.2-.4C25.6 8 18.4 12.4 13.2 19.8" />
+                      <path d="M22.6 17.1 12.6 20.9l.9-10.6" />
+                    </svg>
+                    <svg
+                      class="arrow arrow-down"
+                      viewBox="0 0 26 34"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M16.4 3.5c-3.4 4.6-5 9.4-4.8 13.9.1 2.9.8 6 1.9 9.3" />
+                      <path d="M7.4 20.2l6.2 7.3 6.6-5.6" />
+                    </svg>
+                    <span>{call.note}</span>
+                  </p>
+                </li>
+              ))
+            }
+          </ul>
+
+          <p class="meta booking-note">
+            <a href={site.calcom} rel="noopener">Open the booking page directly</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+{/* Cal.com popup embed. The buttons carry data-cal-link, which this script
+    picks up to open the booking modal in place. It is the only thing on the
+    page that depends on a third-party script, and the buttons are plain links
+    underneath, so a blocked or failed load degrades to opening cal.com in a
+    new tab. */}
+<script is:inline>
+  (function (C, A, L) {
+    let p = function (a, ar) {
+      a.q.push(ar);
+    };
+    let d = C.document;
+    C.Cal =
+      C.Cal ||
+      function () {
+        let cal = C.Cal;
+        let ar = arguments;
+        if (!cal.loaded) {
+          cal.ns = {};
+          cal.q = cal.q || [];
+          d.head.appendChild(d.createElement("script")).src = A;
+          cal.loaded = true;
+        }
+        if (ar[0] === L) {
+          const api = function () {
+            p(api, arguments);
+          };
+          const namespace = ar[1];
+          api.q = api.q || [];
+          if (typeof namespace === "string") {
+            cal.ns[namespace] = cal.ns[namespace] || api;
+            p(cal.ns[namespace], ar);
+            p(cal, ["initNamespace", namespace]);
+          } else p(cal, ar);
+          return;
+        }
+        p(cal, ar);
+      };
+  })(window, "https://app.cal.com/embed/embed.js", "init");
+
+  Cal("init", { origin: "https://app.cal.com" });
+  Cal("ui", { hideEventTypeDetails: false, layout: "month_view" });
+
+  /* The buttons are real links with target="_blank", so a blocked or slow
+     embed still books. Cal's own handler does not cancel the click, so
+     without this the browser would follow the href too and the booker would
+     get a modal and a stray tab at once. Cancel the navigation only when the
+     embed has genuinely run: Cal.loaded flips as soon as the loader appends
+     the script tag, whereas the custom element exists only once embed.js
+     has executed. */
+  var embedReady = function () {
+    return !!(window.customElements && customElements.get("cal-modal-box"));
+  };
+
+  document.querySelectorAll("[data-cal-link]").forEach(function (el) {
+    el.addEventListener("click", function (event) {
+      if (embedReady()) event.preventDefault();
+    });
+  });
+</script>
+</Base>
+
+
+
+<style>
+  .columns { display: grid; gap: clamp(32px, 5vw, 56px); }
+  @media (min-width: 840px) {
+    .columns { grid-template-columns: 1fr 1.2fr; align-items: start; }
+  }
+
+  .links {
+    display: grid;
+    gap: 0;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--rule);
+  }
+  .links > li {
+    padding: 16px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .links .file-kind { display: block; margin-bottom: 4px; }
+  .links a { font-weight: 500; }
+  /* The address is not a link, but it sits in the same row rhythm. */
+  .email { font-weight: 500; user-select: all; }
+
+  /* ----------------------------------------------- book a call ---------
+
+     Two big pills, well apart, each with a handwritten note pointing at it.
+     Phones stack the note above its button; wider screens set it alongside. */
+  .calls {
+    display: grid;
+    gap: clamp(30px, 5vw, 44px);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .call { display: grid; gap: 6px; }
+
+  .call-btn {
+    justify-self: start;
+    padding: 18px 34px;
+    font-size: 1.0625rem;
+  }
+  .call-btn .sep { opacity: 0.55; }
+
+  /* Overrides .hand's fixed tilt with the per-call one. */
+  .call-note {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    margin: 0;
+    max-width: 24ch;
+    transform: rotate(var(--tilt));
+  }
+  .arrow {
+    flex: none;
+    width: auto;
+    overflow: visible;
+  }
+  /* Short arrow pointing down at the button below it. */
+  .arrow-down { height: 32px; margin-left: 10px; }
+  .arrow-side { display: none; height: 30px; }
+
+  @media (min-width: 620px) {
+    .call {
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      gap: 6px;
+    }
+    .arrow-down { display: none; }
+    .arrow-side { display: block; margin-right: 4px; }
+    .call-note { margin-top: 4px; }
+  }
+
+  /* Below that, the note reads first and points down into the button. */
+  @media (max-width: 619.98px) {
+    .call-note { order: -1; margin-bottom: 2px; }
+  }
+
+  .booking-note { margin-top: clamp(26px, 4vw, 34px); }
+</style>

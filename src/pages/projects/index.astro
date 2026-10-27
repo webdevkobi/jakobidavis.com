@@ -1,0 +1,132 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import ProjectCard from "../../components/ProjectCard.astro";
+import civil from "../../data/civil.json";
+
+const projects = (await getCollection("projects")).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+
+const title = "Projects";
+const description =
+  "Five Cornell energy systems projects: NYISO capacity expansion, battery storage economics, pumped storage, life cycle assessment, and solar vertical farming.";
+---
+
+<Base title={title} description={description}>
+  <section class="section">
+    <div class="wrap">
+      <p class="eyebrow">Projects</p>
+      <h1>Five ways I&rsquo;ve tested the energy transition.</h1>
+      <p class="lede">
+        Each one is a page with the same blocks: the problem, what I built, what
+        I found, and what the result does not cover. All five are Cornell
+        academic work.
+      </p>
+    </div>
+  </section>
+
+  <section class="section plain">
+    <div class="wrap">
+      <ol class="project-list">
+        {
+          projects.map((project, i) => (
+            <li data-reveal>
+              <ProjectCard
+                index={i + 1}
+                href={`/projects/${project.id}/`}
+                course={project.data.course}
+                title={project.data.title}
+                result={project.data.result}
+                summary={project.data.cardSummary}
+                tools={project.data.tools}
+              />
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section plain">
+    <div class="wrap">
+      <div class="bento civil-head" data-reveal>
+        <p class="eyebrow">Civil foundations</p>
+        <h2>Before the energy focus, the ground it sits on.</h2>
+        <p class="lede">
+          Geotechnical coursework from earlier in the degree. PDFs only, no
+          write-up pages.
+        </p>
+      </div>
+
+      <ul class="civil">
+        {
+          civil.map((item) => (
+            <li class="bento" data-reveal>
+              <p class="file-kind">{item.course}</p>
+              <h3>{item.title}</h3>
+              <p class="civil-line">{item.line}</p>
+              <p class="civil-role">{item.role}</p>
+              <p class="civil-link">
+                <a href={item.pdf}>Read the PDF</a>
+              </p>
+              {item.note && <p class="civil-note">{item.note}</p>}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* A bento grid rather than a list of equal cards: the capstone takes the
+     full width, then the rest pair off. One column on phones. */
+  .project-list {
+    display: grid;
+    gap: clamp(14px, 2vw, 22px);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  @media (min-width: 760px) {
+    .project-list { grid-template-columns: repeat(6, 1fr); }
+    .project-list > li { grid-column: span 3; }
+    .project-list > li:first-child { grid-column: span 6; }
+    /* The last two share a row in a 2 to 1 split, so the grid does not read
+       as four identical boxes. */
+    .project-list > li:nth-child(4) { grid-column: span 4; }
+    .project-list > li:nth-child(5) { grid-column: span 2; }
+  }
+  .project-list > li { display: grid; }
+
+  .civil-head {
+    margin-bottom: clamp(14px, 2vw, 22px);
+  }
+  .civil-head h2 { max-width: 26ch; }
+  .civil-head .lede { margin-bottom: 0; }
+
+  .civil {
+    display: grid;
+    gap: clamp(14px, 2vw, 22px);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  @media (min-width: 760px) {
+    .civil { grid-template-columns: repeat(3, 1fr); }
+  }
+  .civil h3 {
+    font-size: var(--step-1);
+    margin: 10px 0 0.5em;
+  }
+  .civil-line { color: var(--ink-2); }
+  .civil-role { margin-top: 0.6em; color: var(--ink-2); }
+  .civil-link { margin-top: 0.8em; font-weight: 500; }
+  .civil-note {
+    margin-top: 0.8em;
+    font-size: var(--step--1);
+    line-height: 1.5;
+    color: var(--ink-2);
+  }
+</style>

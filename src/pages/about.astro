@@ -1,0 +1,882 @@
+---
+import Base from "../layouts/Base.astro";
+import site from "../data/site.json";
+
+const title = "About";
+const description =
+  "How a year in Mumbai turned into energy systems engineering, by way of a 2.7 GPA, Cornell baseball's strikeout record, and two years of pro ball.";
+
+const timeline = [
+  {
+    period: "Fifth grade",
+    heading: "A year in Mumbai",
+    body: "I lived in Mumbai for a year in fifth grade. Seeing day to day how unevenly power and infrastructure reach people is the reason I work on energy systems now.",
+  },
+  {
+    period: "Cornell",
+    heading: "A 2.7 to the Dean's List",
+    body: "I started at Cornell with a 2.7 GPA. I finished on the Dean's List. The gap between those two numbers is most of what I know about working under pressure.",
+  },
+  {
+    period: "Four years",
+    heading: "Starter, then captain",
+    body: "Four-year starter and two-year captain for Cornell baseball, in center field. I also hold the program's career strikeout record, which is a record for failing: no hitter in Cornell history struck out more than I did. I started all four years anyway, and I was captain for two of them.",
+  },
+  {
+    period: "After Cornell",
+    heading: "Pro ball",
+    body: "Played for the State College Spikes and the New Jersey Jackals. The record for striking out is still mine, and so is this.",
+  },
+  {
+    period: "Now",
+    heading: "Energy",
+    body: "Capacity expansion, storage economics, and life cycle assessment. The work is on the Projects page, with the numbers and the limits of each one.",
+  },
+];
+
+// The long version, from site-content/TIMELINE.md. `year` is a label, not a
+// date: a couple of stops cover a span or no year at all. Photos live in
+// public/images/timeline/ and are copied from the Professional Website
+// folder; the two About hero prints are deliberately not reused here.
+const stops = [
+  {
+    year: "2013",
+    title: "Mumbai, India",
+    body: "Fifth grade at Oberoi International School. The year engineering first caught my attention.",
+    note: "where it started",
+    photos: [
+      {
+        src: "/images/timeline/mumbai-oberoi.jpg",
+        width: 1050,
+        height: 1400,
+        alt: "Jakobi in fifth grade beside an Oberoi International School swim meet banner in Mumbai",
+        caption: "Oberoi, Mumbai",
+        ar: "3 / 4",
+        pos: "center center",
+        rot: "-3deg",
+        tape: "2.5deg",
+      },
+    ],
+  },
+  {
+    year: "Growing up abroad",
+    title: "Energy, up close",
+    body: "Watched villagers in Tanzania make electricity from cow manure. Climbed a wind turbine in Copenhagen and learned Denmark ran on over 40% wind. Toured a geothermal plant in Iceland.",
+    note: "this is when it clicked",
+    // Three prints fanned across the bottom of the bento. Square frames, so
+    // the landscape and portrait originals still read as one set.
+    photoLayout: "fan",
+    photos: [
+      {
+        src: "/images/timeline/tanzania-farm.jpg",
+        width: 1400,
+        height: 1050,
+        alt: "Jakobi as a boy beside two cows in a village barn in Tanzania",
+        caption: "Tanzania",
+        ar: "1 / 1",
+        pos: "62% center",
+        rot: "-6deg",
+        tape: "4deg",
+      },
+      {
+        src: "/images/timeline/copenhagen-turbine-view.jpg",
+        width: 1050,
+        height: 1400,
+        alt: "A wind turbine on a breakwater in Copenhagen harbour, seen from the top of another turbine",
+        caption: "view from the top, Copenhagen",
+        ar: "1 / 1",
+        pos: "center 58%",
+        rot: "3deg",
+        tape: "-3deg",
+      },
+      {
+        src: "/images/timeline/iceland-geothermal.jpg",
+        width: 1050,
+        height: 1400,
+        alt: "Jakobi beside a Renewable Energy Cycle wall diagram at a geothermal plant in Iceland",
+        caption: "Iceland, geothermal",
+        ar: "1 / 1",
+        pos: "center 45%",
+        rot: "-2deg",
+        tape: "3deg",
+      },
+    ],
+  },
+  {
+    year: "2017 & 2018",
+    title: "UCF Summer Engineering Program",
+    body: "Two summers trying every engineering discipline. My team won first place in the bridge building competition.",
+    note: "first bridge, first win",
+  },
+  {
+    year: "2017 to 2018",
+    title: "Novum, a pedal-powered phone charger",
+    body: "Designed a bike charger that turns pedaling into electricity. Won the Perlman Price Young Entrepreneurs competition and startup funding, and took first in the Ringling College GBM Shark Tank.",
+    note: "my first energy project",
+    photoLayout: "wide",
+    photos: [
+      {
+        src: "/images/timeline/novum-feature.jpg",
+        width: 1400,
+        height: 939,
+        alt: "A magazine feature on Jakobi at fifteen, founder of Novum, the pedal-powered phone charger",
+        caption: "age 15",
+        ar: "3 / 2",
+        pos: "center center",
+        rot: "-2.5deg",
+        tape: "3deg",
+      },
+    ],
+  },
+  {
+    year: "2018 to 2019",
+    title: "Sun Hydraulics mentorship",
+    body: "Monthly design reviews of the charger prototype with a lead engineer, plus job shadows on hydraulic manifold design from start to finish.",
+  },
+  {
+    year: "2019",
+    title: "Cornell Catalyst Academy",
+    body: "A week-long residential engineering program at Cornell.",
+    note: "two years early",
+    photos: [
+      {
+        src: "/images/timeline/catalyst-cornell-2019.jpg",
+        width: 1050,
+        height: 1400,
+        alt: "Jakobi in a Cornell Baseball shirt at the Cornell baseball field during Catalyst Academy",
+        caption: "Cornell, summer 2019",
+        ar: "3 / 4",
+        pos: "center center",
+        rot: "3deg",
+        tape: "-2.5deg",
+      },
+    ],
+  },
+  {
+    year: "2021",
+    title: "Cornell, freshman year",
+    body: "Started Civil and Environmental Engineering with a 2.7 GPA. Built a study system from scratch and climbed to the Dean's List. Named Engineering Peer Mentor of the Year in 2023.",
+    note: "rebuilt from here",
+    photoLayout: "docs",
+    photos: [
+      {
+        src: "/images/timeline/transcript-fall-2021.png",
+        width: 1145,
+        height: 623,
+        alt: "Cornell transcript, fall 2021: six courses and a term GPA of 2.793",
+        caption: "the start",
+        ar: "1145 / 623",
+        pos: "center center",
+        rot: "-1.5deg",
+        tape: "2.5deg",
+      },
+      {
+        src: "/images/timeline/transcript-deans-list.png",
+        width: 886,
+        height: 352,
+        alt: "Cornell transcript, degrees awarded: Dean's List, Bachelor of Science in Civil Engineering with a Sustainable Energy Systems minor",
+        caption: "the finish",
+        ar: "886 / 352",
+        pos: "center center",
+        rot: "2deg",
+        tape: "-2.5deg",
+      },
+    ],
+  },
+  {
+    year: "2021",
+    title: "InstructureCon",
+    body: "Moderated at InstructureCon, interviewed will.i.am about his STEAM work, and gave the closing remarks.",
+    link: {
+      href: "https://www.youtube.com/watch?v=HgB1L_NKGlY&t=1218s",
+      label: "Watch the session",
+    },
+    note: "yes, that will.i.am",
+  },
+  {
+    year: "2021 to 2025",
+    title: "Cornell baseball",
+    body: "Four-year starter, two-year captain, and Cornell's career strikeout leader.",
+    note: "systems under pressure",
+    photos: [
+      {
+        src: "/images/timeline/cornell-baseball.jpg",
+        width: 948,
+        height: 1400,
+        alt: "Jakobi in his Cornell baseball uniform",
+        caption: "Big Red",
+        ar: "2 / 3",
+        pos: "center center",
+        rot: "-3.5deg",
+        tape: "2.5deg",
+      },
+    ],
+  },
+  {
+    year: "May 2025",
+    title: "Cornell graduation",
+    body: "Graduated with a BS in Civil Engineering and a minor in Sustainable Energy Systems, and spoke as the graduating class speaker for Cornell Engineering. Capstone: modeled New York's grid under a carbon tax.",
+    note: "class speaker",
+    photos: [
+      {
+        src: "/images/timeline/graduation-stairs.jpg",
+        width: 933,
+        height: 1400,
+        alt: "Jakobi in a suit and OIE Scholar stole on a staircase at his Cornell graduation",
+        caption: "May 2025",
+        ar: "2 / 3",
+        pos: "center center",
+        rot: "2.5deg",
+        tape: "-3deg",
+      },
+    ],
+  },
+  {
+    year: "2025 to 2026",
+    title: "Pro baseball",
+    body: "Pitched in the MLB Draft League for the State College Spikes (July to September 2025), then for the New Jersey Jackals in the Frontier League (summer 2026). Studied for and passed the FE exam in between (November 2025).",
+    note: "engineer in the offseason",
+    // Two prints: the catch in front, the dugout shot smaller and behind it.
+    photoLayout: "stack",
+    photos: [
+      {
+        src: "/images/timeline/pro-jackals-catch.jpg",
+        width: 1122,
+        height: 1400,
+        alt: "Jakobi leaping at the outfield wall to make a catch for the New Jersey Jackals",
+        caption: "Jackals, 2026",
+        ar: "4 / 5",
+        pos: "center center",
+        rot: "-3deg",
+        tape: "2deg",
+      },
+      {
+        src: "/images/timeline/pro-jackals-team.jpg",
+        width: 1079,
+        height: 858,
+        alt: "Jakobi with three New Jersey Jackals teammates in the dugout",
+        caption: "the squad",
+        ar: "5 / 4",
+        pos: "center center",
+        rot: "5deg",
+        tape: "-4deg",
+      },
+    ],
+  },
+  {
+    year: "Now",
+    title: "The grid",
+    body: "Studying the energy transition piece by piece: policy, economics, and what can actually get built. Founder of Champions Voice. Looking for energy roles and projects.",
+    note: "your move",
+    green: true,
+    cta: { href: site.calcomDiscovery, label: "Discovery Call" },
+  },
+];
+---
+
+<Base title={title} description={description}>
+  <section class="section">
+    <div class="wrap">
+      <p class="eyebrow">About</p>
+      <div class="intro">
+        <div>
+          <h1>From Mumbai to Cornell to the grid.</h1>
+          <p class="lede">
+            Energy systems engineer. Author. Founder. Former Division I captain.
+            The through line is systems that have to hold up when conditions are
+            bad, not just when they are average.
+          </p>
+          {/* The one handwritten note on this page. */}
+          <p class="hand note-line" aria-hidden="true">
+            <span>same thread the whole way</span>
+          </p>
+        </div>
+        {/* Two prints taped into the notebook, Mumbai on the left and
+            overlapping Cornell. They spread apart on hover. */}
+        <div class="prints">
+          <figure class="print print-mumbai">
+            <img
+              src="/images/about-mumbai.jpg"
+              width="1200"
+              height="1600"
+              alt="Jakobi in fifth grade in Mumbai, India"
+              decoding="async"
+            />
+            <figcaption>Mumbai, 5th grade</figcaption>
+          </figure>
+          <figure class="print print-cornell">
+            <img
+              src="/images/about-cornell.jpg"
+              width="1200"
+              height="1500"
+              alt="Jakobi at his Cornell graduation, May 2025"
+              decoding="async"
+            />
+            <figcaption>Cornell, May 2025</figcaption>
+          </figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section plain">
+    <div class="wrap">
+      <div class="bento timeline-head" data-reveal>
+        <h2>The short version.</h2>
+      </div>
+      <ol class="timeline">
+        {
+          timeline.map((entry) => (
+            <li class="bento" data-reveal>
+              <p class="file-kind">{entry.period}</p>
+              <h3>{entry.heading}</h3>
+              <p>{entry.body}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  {/* The long version: a line down the graph paper with one stop per dot.
+      Stops alternate sides on desktop and run in one column, line on the
+      left, on phones. */}
+  <section class="section plain">
+    <div class="wrap">
+      <div class="bento timeline-head" data-reveal>
+        <h2>The long version.</h2>
+      </div>
+      <ol class="stops">
+        {
+          stops.map((stop) => (
+            <li class="stop" data-reveal>
+              {/* The year rides the rail: above the bento on phones, beside
+                  the dot in the open margin on desktop. */}
+              <p class="file-kind stop-year">{stop.year}</p>
+
+              <div class:list={["bento", "stop-card", { green: stop.green }]}>
+                <h3>{stop.title}</h3>
+                <p>{stop.body}</p>
+
+                {stop.link && (
+                  <p class="meta stop-link">
+                    <a href={stop.link.href} rel="noopener">
+                      {stop.link.label}
+                    </a>
+                  </p>
+                )}
+
+                {stop.photos && (
+                  <div
+                    class:list={[
+                      "stop-photos",
+                      `is-${stop.photoLayout ?? "single"}`,
+                    ]}
+                  >
+                    {stop.photos.map((photo) => (
+                      <figure
+                        class="print stop-print"
+                        style={`--rot: ${photo.rot}; --tape: ${photo.tape}; --ar: ${photo.ar}; --pos: ${photo.pos}`}
+                      >
+                        <img
+                          src={photo.src}
+                          width={photo.width}
+                          height={photo.height}
+                          alt={photo.alt}
+                          loading="lazy"
+                          decoding="async"
+                        />
+                        <figcaption>{photo.caption}</figcaption>
+                      </figure>
+                    ))}
+                  </div>
+                )}
+
+                {stop.cta && (
+                  <p class="stop-cta">
+                    <a class="btn solid" href={stop.cta.href} rel="noopener">
+                      {stop.cta.label}
+                    </a>
+                  </p>
+                )}
+              </div>
+
+              {/* Decorative: the note is an aside on the bento it points at,
+                  so screen readers skip it. No arrow on phones, where the
+                  note simply sits under the box. */}
+              {stop.note && (
+                <p class="hand stop-note" aria-hidden="true">
+                  <svg
+                    class="arrow"
+                    viewBox="0 0 56 32"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M52 6.5c-5.4-2.1-12.8-2.6-20.2-.4C25.6 8 18.4 12.4 13.2 19.8" />
+                    <path d="M22.6 17.1 12.6 20.9l.9-10.6" />
+                  </svg>
+                  <span>{stop.note}</span>
+                </p>
+              )}
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .intro { display: grid; gap: clamp(28px, 4vw, 44px); }
+  @media (min-width: 840px) {
+    .intro { grid-template-columns: 1.1fr 1fr; align-items: start; }
+  }
+  .note-line { margin: 18px 0 0; }
+
+  /* ------------------------------------------------- taped photo prints ----
+
+     A row, not a stack. Cornell is pulled left by a quarter of a print width
+     for the resting overlap and dropped a little, which puts its caption
+     clear below Mumbai's bottom edge. Mumbai is the front print, because at
+     this overlap its own caption would otherwise be clipped. Spreading on
+     hover is a transform, so the resting margin never animates. */
+  .prints {
+    /* 230px is the design size; below about 1200px wide the column cannot
+       hold two of those side by side once they spread, so the prints track
+       the column instead. 48cqw leaves room for the hover scale. */
+    --w: min(230px, 48cqw);
+    --drop: 44px;
+
+    container-type: inline-size;
+
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    /* Room for the rotated corners, the tape, and the hover spread. */
+    padding: 16px 4px 12px;
+  }
+  .print {
+    --rot: 0deg;
+    --tape: -2deg;
+    --shift: 0px;
+    --scale: 1;
+
+    position: relative;
+    margin: 0;
+    /* White border, thicker at the bottom, where the caption is written. */
+    padding: 10px 10px 8px;
+    background: #fff;
+    border-radius: 2px;
+    box-shadow:
+      0 12px 26px -14px rgba(28, 26, 23, 0.4),
+      0 2px 6px -3px rgba(28, 26, 23, 0.22);
+    transform: translateX(var(--shift)) rotate(var(--rot)) scale(var(--scale));
+    transition:
+      transform 350ms ease-out,
+      box-shadow 350ms ease-out;
+  }
+
+  /* A strip of tape over the top edge, half on the print and half on the
+     paper. Warm ivory rather than white, so it registers over both. */
+  .print::before {
+    content: "";
+    position: absolute;
+    z-index: 2;
+    top: -11px;
+    left: 50%;
+    width: var(--tape-w, 78px);
+    height: 24px;
+    background: rgba(231, 225, 211, 0.6);
+    border: 1px solid rgba(28, 26, 23, 0.06);
+    box-shadow: 0 1px 2px rgba(28, 26, 23, 0.05);
+    transform: translateX(-50%) rotate(var(--tape));
+  }
+
+  /* One frame shape per print. The hero pair share 4:5 so they read as a
+     matched set; timeline prints pass their own ratio, since a magazine
+     spread and a full-length baseball photo do not survive the same crop. */
+  .print img {
+    display: block;
+    width: 100%;
+    aspect-ratio: var(--ar, 4 / 5);
+    height: auto;
+    object-fit: cover;
+    object-position: var(--pos, center top);
+    background: var(--panel);
+  }
+  .print figcaption {
+    font-family: var(--hand);
+    font-weight: 600;
+    font-size: 1.1rem;
+    line-height: 1.1;
+    color: var(--forest);
+    text-align: center;
+    padding: 9px 2px 3px;
+  }
+
+  .prints .print {
+    flex: none;
+    width: var(--w);
+    max-width: 100%;
+  }
+
+  .print-mumbai {
+    --rot: -5deg;
+    --tape: 3deg;
+    z-index: 2;
+  }
+  .print-cornell {
+    --rot: 4deg;
+    --tape: -2.5deg;
+    z-index: 1;
+  }
+
+  /* Phones and tablets: side by side, clear of each other, no hover. Cornell
+     keeps its lower sit so the pair still reads as two loose prints. */
+  .prints { gap: clamp(10px, 2.5vw, 20px); flex-wrap: wrap; }
+  .print-cornell { margin-top: 22px; }
+
+  /* Narrow enough that two prints would be postage stamps: stack them. */
+  @media (max-width: 459.98px) {
+    /* One per row, so each can take most of the column. */
+    .prints {
+      --w: min(230px, 72cqw);
+      flex-direction: column;
+      align-items: center;
+      gap: 26px;
+    }
+    .print-cornell { margin-top: 0; }
+  }
+
+  /* Desktop, where the photo column is its own column: overlap by a quarter
+     and enable the hover spread. */
+  @media (min-width: 840px) {
+    .prints { gap: 0; flex-wrap: nowrap; }
+    .print-cornell {
+      margin-top: var(--drop);
+      margin-left: calc(var(--w) * -0.2);
+    }
+  }
+
+  /* Hover the pair: out to zero overlap, almost square to the page, a touch
+     larger, and the shadow drops further. The shift is half the distance
+     from a quarter-width overlap to a small gap, and it covers the 6% each
+     print grows by, so the scaled edges still clear each other. Hovering one
+     print lifts just that one to the front. */
+  @media (hover: hover) and (min-width: 840px) {
+    .prints:hover .print,
+    .prints:focus-within .print {
+      --scale: 1.06;
+      box-shadow:
+        0 24px 44px -16px rgba(28, 26, 23, 0.46),
+        0 5px 12px -5px rgba(28, 26, 23, 0.26);
+    }
+    .prints:hover .print-mumbai,
+    .prints:focus-within .print-mumbai {
+      --shift: -34px;
+      --rot: -1deg;
+    }
+    .prints:hover .print-cornell,
+    .prints:focus-within .print-cornell {
+      --shift: 34px;
+      --rot: 1deg;
+    }
+    .print:hover,
+    .print:focus-within { z-index: 3; }
+  }
+
+  /* Reduced motion: no transition, and the pair holds its resting geometry.
+     The shadow still deepens, since that is not movement. */
+  @media (prefers-reduced-motion: reduce) {
+    .print { transition: none; }
+    @media (hover: hover) and (min-width: 840px) {
+      .prints:hover .print,
+      .prints:focus-within .print {
+        --scale: 1;
+        --shift: 0px;
+      }
+      .prints:hover .print-mumbai,
+      .prints:focus-within .print-mumbai { --rot: -5deg; }
+      .prints:hover .print-cornell,
+      .prints:focus-within .print-cornell { --rot: 4deg; }
+    }
+  }
+
+  /* ------------------------------------------------------- the stops ------
+
+     A dashed rule down the graph paper with one dot per stop. The year rides
+     the rule like a ruler mark, the bento sits to one side, and the Caveat
+     note sits in the open margin with an arrow back at the box. Desktop
+     alternates sides; phones run one column with the rule on the left. */
+  .stops {
+    --line: 2px;
+    --dot: 14px;
+    /* Where the dot centre sits, measured from the top of the stop: level
+       with the year label, which is the first thing in a stop. */
+    --dot-top: 8px;
+    --gap: clamp(40px, 6vw, 64px);
+    --rail: 16px;
+    --ink-line: rgba(31, 93, 69, 0.4);
+
+    position: relative;
+    display: grid;
+    gap: var(--gap);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* The rule is drawn per stop, from this dot down to the next one, so it
+     starts at the first dot and stops dead at the last. A single rule on the
+     list could not know where the last dot falls. */
+  .stop:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    z-index: 0;
+    top: var(--dot-top);
+    bottom: calc(-1 * (var(--gap) + var(--dot-top)));
+    left: var(--rail);
+    width: var(--line);
+    margin-left: calc(var(--line) / -2);
+    /* 6 on, 6 off. A repeating gradient rather than a dashed border, so the
+       dash length is the same on every browser. */
+    background-image: repeating-linear-gradient(
+      to bottom,
+      var(--ink-line) 0 6px,
+      transparent 6px 12px
+    );
+  }
+
+  .stop {
+    position: relative;
+    padding-left: calc(var(--rail) + 24px);
+  }
+
+  /* The dot: brand green with a page-coloured ring, so it sits cleanly on
+     the graph paper rather than on top of a grid line. */
+  .stop::before {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    top: var(--dot-top);
+    left: var(--rail);
+    width: var(--dot);
+    height: var(--dot);
+    margin: calc(var(--dot) / -2) 0 0 calc(var(--dot) / -2);
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 0 3px var(--page);
+  }
+  /* Now is the end of the line, so its dot is the bigger one. */
+  .stop:last-child::before { --dot: 20px; }
+
+  .stop-year {
+    margin: 0 0 10px;
+  }
+
+  .stop-card {
+    padding: 24px;
+  }
+  .stop-card h3 {
+    font-size: var(--step-2);
+    margin: 0 0 0.5em;
+  }
+  .stop-card > p { color: var(--ink-2); }
+  .stop-card.green > p { color: var(--on-dark-2); }
+  .stop-link { margin: 12px 0 0; }
+  .stop-cta { margin: clamp(18px, 2.5vw, 24px) 0 0; }
+
+  /* ---- the prints on a stop ---------------------------------------------
+
+     Taped prints dropped under the text, pulled past the outer edge of the
+     bento on desktop where there is margin to spare. */
+  .stop-photos {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    margin: clamp(20px, 3vw, 26px) 0 4px;
+  }
+  .stop-photos .print { flex: none; }
+  .stop-print figcaption {
+    font-size: 1rem;
+    padding-bottom: 2px;
+  }
+  /* A caption is as wide as its own print and no wider. Uppercase Caveat
+     with tracking can outrun a narrow frame, and a caption that spills sits
+     on top of the next print. */
+  .print figcaption {
+    max-width: 100%;
+    overflow-wrap: break-word;
+  }
+
+  /* One print: the common case. */
+  .is-single .print { width: min(190px, 62%); }
+  /* A landscape original (the magazine feature) gets a wider frame. */
+  .is-wide .print { width: min(250px, 84%); }
+  .is-wide .stop-print figcaption { white-space: normal; }
+
+  /* Two document scans, one under the other. These are meant to be read,
+     not just glanced at, so they run near the full width of the bento and
+     never overlap: a transcript with another print across it is unreadable.
+     The slight opposing rotations keep them from looking like a PDF. */
+  .is-docs {
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+  .is-docs .print { width: min(300px, 92%); }
+  .is-docs .stop-print figcaption { white-space: normal; }
+
+  /* Three prints fanned across the box, overlapping slightly, each one in
+     front of the one after it. */
+  /* Captions wrap inside their own print here, so three of them can sit
+     side by side without running into each other. */
+  .is-fan { padding-top: 6px; gap: 8px; }
+  .is-fan .print { --tape-w: 46px; width: min(124px, 30%); }
+  .is-fan .print:nth-child(1) { z-index: 3; }
+  .is-fan .print:nth-child(2) { z-index: 2; margin-top: 16px; }
+  .is-fan .print:nth-child(3) { z-index: 1; margin-top: 4px; }
+  .is-fan figcaption {
+    font-size: 0.9rem;
+    line-height: 1.15;
+    letter-spacing: 0.04em;
+  }
+  /* On a narrow phone three prints across leave a frame too small for
+     "Copenhagen" to fit on one line, and the caption would break mid-word.
+     Below that, they wrap to two rows and keep their width. */
+  @media (max-width: 479.98px) {
+    .is-fan { flex-wrap: wrap; row-gap: 12px; }
+    .is-fan .print { width: min(124px, 44%); }
+    .is-fan .print:nth-child(2) { margin-top: 10px; }
+    .is-fan .print:nth-child(3) { margin-top: 0; }
+  }
+
+  /* Two prints: the catch in front, the dugout shot smaller and behind. */
+  .is-stack .print:first-child { width: min(176px, 54%); z-index: 2; }
+  .is-stack .print:last-child {
+    --tape-w: 52px;
+    width: min(136px, 42%);
+    margin: 22px 0 0 -20px;
+    z-index: 1;
+  }
+  .is-stack figcaption { font-size: 0.95rem; }
+  /* The back print is overlapped on its left by the front one, so its
+     caption runs right and is padded clear of the overlap: no part of "the
+     squad" can end up behind the catch. */
+  .is-stack .print:last-child figcaption {
+    text-align: right;
+    padding-left: 26px;
+    padding-right: 4px;
+  }
+
+  /* ---- the Caveat note --------------------------------------------------
+
+     Under the bento on phones, with no arrow. */
+  .stop-note {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    margin: 14px 0 0;
+    max-width: 26ch;
+    transform: rotate(-3deg);
+  }
+  .stop:nth-child(even) .stop-note { transform: rotate(2deg); }
+  .arrow {
+    display: none;
+    flex: none;
+    width: auto;
+    height: 28px;
+    overflow: visible;
+  }
+
+  @media (min-width: 900px) {
+    /* The year moves off the top of the bento and into the margin, so the
+       dot drops to meet it there. */
+    .stops { --rail: 50%; --dot-top: 32px; }
+
+    /* Two halves. The bento spans both rows of its half; the year and the
+       note stack in the open half, the year level with the dot. */
+    .stop {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      grid-template-rows: auto 1fr;
+      align-items: start;
+      padding-left: 0;
+    }
+
+    .stop-card {
+      grid-row: 1 / 3;
+      width: min(420px, 100%);
+    }
+    .stop-year { grid-row: 1; margin: calc(var(--dot-top) - 8px) 0 0; }
+    .stop-note { grid-row: 2; margin-top: clamp(20px, 3vw, 34px); }
+
+    /* Odd stops: bento left of the rule, year and note right of it. Even
+       stops swap, and the arrow mirrors to keep pointing at the box. */
+    .stop:nth-child(odd) .stop-card {
+      grid-column: 1;
+      justify-self: end;
+      margin-right: clamp(40px, 5vw, 56px);
+    }
+    .stop:nth-child(odd) :is(.stop-year, .stop-note) {
+      grid-column: 2;
+      justify-self: start;
+    }
+    .stop:nth-child(odd) .stop-year { margin-left: 20px; }
+    .stop:nth-child(odd) .stop-note { margin-left: 26px; }
+
+    .stop:nth-child(even) .stop-card {
+      grid-column: 2;
+      justify-self: start;
+      margin-left: clamp(40px, 5vw, 56px);
+    }
+    .stop:nth-child(even) :is(.stop-year, .stop-note) {
+      grid-column: 1;
+      justify-self: end;
+    }
+    .stop:nth-child(even) .stop-year { margin-right: 20px; }
+    .stop:nth-child(even) .stop-note {
+      margin-right: 26px;
+      flex-direction: row-reverse;
+      text-align: right;
+    }
+    .stop:nth-child(even) .arrow { transform: scaleX(-1); }
+
+    .arrow { display: block; margin-inline: 2px 6px; }
+
+    /* The prints hang past the outer edge of the bento, into the page
+       margin rather than into the rule. */
+    .stop:nth-child(odd) .stop-photos { margin-left: -36px; margin-right: 8px; }
+    .stop:nth-child(even) .stop-photos { margin-right: -36px; margin-left: 8px; }
+  }
+
+  .timeline-head {
+    margin-bottom: clamp(14px, 2vw, 22px);
+  }
+  .timeline-head h2 { margin: 0; }
+
+  /* Mixed sizes: the two formative entries take the wide boxes, the rest pair
+     off. One column on phones. */
+  .timeline {
+    display: grid;
+    gap: clamp(14px, 2vw, 22px);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  @media (min-width: 820px) {
+    .timeline { grid-template-columns: repeat(6, 1fr); }
+    .timeline > li { grid-column: span 3; }
+    .timeline > li:nth-child(1) { grid-column: span 4; }
+    .timeline > li:nth-child(2) { grid-column: span 2; }
+    .timeline > li:last-child { grid-column: span 6; }
+  }
+  .timeline h3 {
+    font-size: var(--step-2);
+    margin: 10px 0 0.5em;
+  }
+  .timeline p:last-child { color: var(--ink-2); }
+</style>

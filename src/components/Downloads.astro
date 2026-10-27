@@ -1,0 +1,39 @@
+---
+interface Props {
+  items: { label: string; kind: string; href?: string }[];
+}
+
+const { items } = Astro.props;
+---
+
+<ul class="files">
+  {
+    items.map((item) =>
+      item.href ? (
+        <li>
+          <a href={item.href}>
+            <span class="file-name">{item.label}</span>
+            <span class="file-kind">{item.kind}</span>
+          </a>
+        </li>
+      ) : (
+        <li>
+          <span class="file-empty">
+            <span class="file-name ph">{item.label}</span>
+            <span class="file-kind">Not uploaded yet</span>
+          </span>
+        </li>
+      ),
+    )
+  }
+</ul>
+
+<style>
+  .file-empty {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.35em 0.75em;
+    padding: 14px 0;
+  }
+</style>

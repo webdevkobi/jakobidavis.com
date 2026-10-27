@@ -1,0 +1,231 @@
+---
+import type { GetStaticPaths } from "astro";
+import { getCollection, render } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import Prose from "../../components/Prose.astro";
+import Figure from "../../components/Figure.astro";
+import Downloads from "../../components/Downloads.astro";
+import Value from "../../components/Value.astro";
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const projects = await getCollection("projects");
+  return projects.map((project) => ({
+    params: { slug: project.id },
+    props: { project },
+  }));
+};
+
+const { project } = Astro.props;
+const d = project.data;
+
+// The markdown body is optional. It renders as "Notes" at the end.
+const { Content } = await render(project);
+const hasNotes = (project.body ?? "").trim().length > 0;
+---
+
+<Base title={d.metaTitle ?? d.title} description={d.description}>
+  <article>
+    <!-- Title -->
+    <header class="section head">
+      <div class="wrap">
+        <p class="eyebrow">{d.course}</p>
+        <h1>{d.title}</h1>
+
+        {/* The headline result, on the forest bento. */}
+        <div class="bento green result">
+          <p class="label">Result in one line</p>
+          <p class="result-line">{d.result}</p>
+        </div>
+      </div>
+    </header>
+
+    <!-- Context -->
+    <section class="section">
+      <div class="wrap" data-reveal>
+        <h2 class="block-label">Context</h2>
+        <dl class="context">
+          <div>
+            <dt class="file-kind">Course</dt>
+            <dd>{d.course}</dd>
+          </div>
+          <div>
+            <dt class="file-kind">Semester</dt>
+            <dd><Value value={d.semester} /></dd>
+          </div>
+          <div>
+            <dt class="file-kind">Team</dt>
+            <dd><Value value={d.team} /></dd>
+          </div>
+          {/* My part is a sentence or three, not a field value, so it takes
+              its own full-width row under the three short fields. */}
+          <div class="my-part">
+            <dt class="file-kind">My part</dt>
+            <dd><Value value={d.myPart} /></dd>
+          </div>
+        </dl>
+        <p class="academic meta">Cornell academic work.</p>
+      </div>
+    </section>
+
+    <!-- Problem -->
+    <section class="section">
+      <div class="wrap" data-reveal>
+        <h2 class="block-label">The problem</h2>
+        <Prose text={d.problem} />
+      </div>
+    </section>
+
+    <!-- Approach -->
+    <section class="section">
+      <div class="wrap" data-reveal>
+        <h2 class="block-label">What I built</h2>
+        <Prose text={d.approach} />
+        <ul class="tools">
+          {d.tools.map((tool) => <li class="meta"><Value value={tool} /></li>)}
+        </ul>
+      </div>
+    </section>
+
+    <!-- Result -->
+    <section class="section">
+      <div class="wrap" data-reveal>
+        <h2 class="block-label">What I found</h2>
+        <ul class="stats">
+          {
+            d.numbers.map((n) => (
+              <li>
+                <span class="stat-label">{n.label}</span>
+                <span class="stat-value">{n.value}</span>
+              </li>
+            ))
+          }
+        </ul>
+        <div class:list={["result-body", { "has-figure": d.figure.src }]}>
+          <Prose text={d.resultNote} />
+          <Figure src={d.figure.src} alt={d.figure.alt} caption={d.figure.caption} />
+        </div>
+      </div>
+    </section>
+
+    <!-- Limits and sensitivity -->
+    <section class="section">
+      <div class="wrap" data-reveal>
+        <h2 class="block-label">What it does not cover</h2>
+        <Prose text={d.limits} />
+      </div>
+    </section>
+
+    {
+      hasNotes && (
+        <section class="section">
+          <div class="wrap" data-reveal>
+            <h2 class="block-label">Notes</h2>
+            <div class="prose">
+              <Content />
+            </div>
+          </div>
+        </section>
+      )
+    }
+
+    <!-- Downloads -->
+    <section class="section">
+      <div class="wrap" data-reveal>
+        <h2 class="block-label">Downloads</h2>
+        <div class="downloads">
+          <Downloads items={d.downloads} />
+        </div>
+        <p class="back">
+          <a href="/projects/">All projects</a>
+        </p>
+      </div>
+    </section>
+  </article>
+</Base>
+
+<style>
+  .head h1 { max-width: 26ch; margin-bottom: clamp(20px, 3vw, 28px); }
+
+  .result { max-width: 46ch; }
+  .result-line {
+    margin: 0.55em 0 0;
+    font-family: var(--display);
+    font-weight: 500;
+    font-size: var(--step-2);
+    line-height: 1.26;
+    letter-spacing: -0.02em;
+    color: var(--on-dark);
+  }
+
+  /* Block titles on a project page are small uppercase labels, not display
+     headings, so the words of the project stay the largest thing in the box. */
+  .block-label {
+    font-family: var(--sans);
+    font-size: var(--step-label);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    line-height: 1.45;
+    color: var(--ink-2);
+    margin-bottom: 1.1rem;
+  }
+
+  .context {
+    display: grid;
+    gap: 20px 32px;
+    margin: 0 0 1.5em;
+  }
+  @media (min-width: 620px) {
+    .context { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .context .my-part {
+      grid-column: 1 / -1;
+      border-top: 1px solid var(--rule);
+      padding-top: 18px;
+    }
+  }
+  .context dt { margin-bottom: 5px; }
+  .context dd { margin: 0; font-weight: 500; }
+  .context .my-part dd {
+    font-weight: 400;
+    color: var(--ink-2);
+    max-width: var(--measure);
+  }
+  .academic { margin: 0; }
+
+  .tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 10px;
+    list-style: none;
+    margin: 1.5em 0 0;
+    padding: 0;
+  }
+  .tools li {
+    padding: 5px 13px;
+    border: 1px solid var(--rule-strong);
+    border-radius: 12px;
+    font-size: var(--step--1);
+    font-weight: 400;
+    letter-spacing: 0;
+    text-transform: none;
+    line-height: 1.45;
+    color: var(--ink-2);
+  }
+
+  .result-body {
+    display: grid;
+    gap: clamp(28px, 4vw, 40px);
+    margin-top: clamp(32px, 5vw, 48px);
+  }
+  /* The prose shares the row with a figure only when there is one; without
+     it the text runs the full measure instead of leaving a dead column. */
+  @media (min-width: 860px) {
+    .result-body.has-figure {
+      grid-template-columns: 1fr 1fr;
+      align-items: start;
+    }
+  }
+
+  .downloads { max-width: 42rem; border-top: 1px solid var(--rule); }
+  .back { margin-top: 2em; font-weight: 500; }
+</style>

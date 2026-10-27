@@ -1,0 +1,112 @@
+---
+import Base from "../layouts/Base.astro";
+import site from "../data/site.json";
+
+const title = "Writing and Speaking";
+const description =
+  "The Student-Athlete Playbook, the graduating class address for Cornell Engineering, keynotes, and an interview with will.i.am at InstructureCon.";
+
+// Items without a link carry no visible placeholder: the entry still reads as
+// a finished line, and the link appears when there is one.
+const items = [
+  {
+    kind: "Book",
+    title: "The Student-Athlete Playbook",
+    body: "What I wish someone had handed me at eighteen. The systems that carry an athlete through school, recruiting, and whatever comes after the last game.",
+    href: "https://championsvoice.org/products/student-athlete-playbook",
+    linkLabel: "Get the book",
+  },
+  {
+    kind: "Address",
+    title: "Graduating class speaker, Cornell Engineering",
+    body: "Selected to speak for the graduating class of Cornell Engineering.",
+    href: null,
+    linkLabel: null,
+  },
+  {
+    kind: "Keynotes",
+    title: "Keynotes",
+    body: "I speak to students, athletes, and schools about building systems that hold up under pressure.",
+    href: site.calcomDiscovery,
+    linkLabel: "Book me to speak",
+  },
+  {
+    kind: "Interview",
+    title: "Interview with will.i.am at InstructureCon",
+    body: "On stage at InstructureCon, in conversation with will.i.am.",
+    href: "https://www.youtube.com/watch?v=HgB1L_NKGlY&t=1218s",
+    linkLabel: "Watch the interview",
+  },
+];
+---
+
+<Base title={title} description={description}>
+  <section class="section">
+    <div class="wrap">
+      <p class="eyebrow">Writing and Speaking</p>
+      <h1>A book, a commencement address, and a few stages.</h1>
+      <p class="lede">
+        What I have written and where I have spoken, including one conversation
+        I did not expect to be part of.
+      </p>
+    </div>
+  </section>
+
+  <section class="section plain">
+    <div class="wrap">
+      <ul class="items">
+        {
+          items.map((item) => (
+            <li class="bento" data-reveal>
+              <p class="file-kind">{item.kind}</p>
+              <h2>{item.title}</h2>
+              <p class="body">{item.body}</p>
+              {item.href && (
+                <p class="go">
+                  <a href={item.href} rel="noopener">
+                    {item.linkLabel}
+                  </a>
+                </p>
+              )}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap" data-reveal>
+      <h2>Booking a talk.</h2>
+      <p class="prose">
+        For a talk, a panel, or an interview, the fastest route is{" "}
+        <a href={site.calcomDiscovery} rel="noopener">a discovery call</a>, or
+        the <a href="/contact/">contact page</a>.
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .items {
+    display: grid;
+    gap: clamp(14px, 2vw, 22px);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  @media (min-width: 760px) {
+    .items { grid-template-columns: repeat(6, 1fr); }
+    .items > li { grid-column: span 3; }
+    /* The book leads, so it takes the wide box. */
+    .items > li:first-child { grid-column: span 6; }
+    .items > li:nth-child(2) { grid-column: span 4; }
+    .items > li:nth-child(3) { grid-column: span 2; }
+  }
+  .items h2 {
+    font-size: var(--step-2);
+    margin: 10px 0 0.5em;
+  }
+  .body { color: var(--ink-2); }
+  .go { margin-top: 1.2em; font-weight: 500; }
+</style>

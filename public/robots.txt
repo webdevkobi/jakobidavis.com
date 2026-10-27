@@ -1,2 +1,4 @@
 User-agent: *
 Allow: /
+
+Sitemap: https://jakobidavis.com/sitemap-index.xml
