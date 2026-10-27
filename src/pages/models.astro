@@ -9,6 +9,9 @@ const MAX = rows[rows.length - 1].price;
 const STEP = 5;
 const START_PRICE = MAX;
 const GOAL = model.goalShare;
+// The scenario the slider can line up with: the weather test holds the price
+// at $55, and its average year is the same run the slider shows at $55.
+const MATCH_KEY = "average";
 
 // Server-rendered starting state, so the page reads correctly before and
 // without JavaScript.
@@ -25,10 +28,9 @@ const description =
       <p class="eyebrow">Models</p>
       <h1>What a carbon price buys New York.</h1>
       <p class="lede">
-        Every step on this slider is a run of the model, not a point drawn
-        between two. At {formatPrice(MAX)} the system clears the {GOAL}% goal
-        in an average resource year. Whether it holds there depends on the
-        weather.
+        Every stop on this slider is a real run of my capstone model. Nothing
+        in between is filled in. At ${MAX} a ton, New York hits {GOAL}%
+        renewables in a normal year. A bad weather year is a different story.
       </p>
     </div>
   </section>
@@ -82,8 +84,7 @@ const description =
             <span>${MAX} per ton</span>
           </div>
           <p class="meta" id="price-help">
-            Dollars per ton of carbon dioxide, {MIN} to {MAX}, in ${STEP} steps.
-            Every step is a model run.
+            Dollars per ton of CO2, from ${MIN} to ${MAX} in ${STEP} steps.
           </p>
         </div>
 
@@ -130,17 +131,29 @@ const description =
         </div>
       </div>
 
-      {/* The slider answers an average year. This is the same price under a
-          better and a worse one, which is the actual finding. */}
+      {/* Fix 1: the weather test only ever ran at $55, so these three bars
+          are fixed. They sit in their own bento, set apart from the slider,
+          and the average-year bar lights up when the slider lands on $55. */}
       <div class="bento stress" data-reveal>
         <h2 class="block-label">
-          Stress test: hold the price at {formatPrice(model.stressTest.price)},
-          change the weather
+          Stress test at {formatPrice(model.stressTest.price)}: same price,
+          different weather
         </h2>
+        <p class="meta stress-note">
+          I only ran the weather test at ${model.stressTest.price}, so these
+          bars stay put when you move the slider.
+        </p>
         <ul class="scenarios">
           {
             model.stressTest.scenarios.map((s) => (
-              <li class:list={["scenario", `is-${s.key}`]}>
+              <li
+                class:list={[
+                  "scenario",
+                  `is-${s.key}`,
+                  { "is-matched": s.key === MATCH_KEY && START_PRICE === model.stressTest.price },
+                ]}
+                data-scenario={s.key}
+              >
                 <div class="scenario-head">
                   <span class="scenario-label">
                     {s.label} <span class="meta num">{s.availability}</span>
@@ -165,29 +178,27 @@ const description =
         </ul>
 
         <p class="finding">
-          A poor year needs <span class="figure-num"
-            >{formatPrice(model.worstCase.price)}</span
-          > to hold {model.worstCase.share}% renewables. That is {
+          A bad year needs <span class="figure-num"
+            >${model.worstCase.price}</span
+          > a ton to hold {model.worstCase.share}%. That&rsquo;s {
             model.worstCase.increaseOverBase
-          } more than {formatPrice(model.stressTest.price)}, at {
+          } more than ${model.stressTest.price}, at {
             model.worstCase.costPerMw
           } per MW.
         </p>
       </div>
 
       <div class="bento caveat" data-reveal>
-        <h2 class="block-label">What this is</h2>
+        <h2 class="block-label">Where these numbers come from</h2>
         <div class="prose">
           <p>
-            {model.provenance} The slider runs from {formatPrice(MIN)} to {
-              formatPrice(MAX)
-            } because that is the range the average year was run at. There is no
-            line drawn past it.
+            My CEE 4880 capstone, built in AMPL: NYISO&rsquo;s 11 zones, one
+            year of data. I only ran the normal year from ${MIN} to ${MAX}, so
+            the slider stops there.
           </p>
           <p>
-            It is a model output, not a forecast. It depends on the cost
-            assumptions for new capacity, the load trajectory, and the resource
-            years used to define an average year and a poor one.
+            It&rsquo;s a model, not a forecast. Change the cost assumptions or
+            the demand and the numbers move.
           </p>
           <p>
             Source: <a href="/projects/nyiso-capacity-expansion-carbon-tax/"
@@ -221,6 +232,12 @@ const description =
     if (costOut) costOut.textContent = row.cost;
     if (gasOut) gasOut.textContent = formatShare(row.gas);
     if (bar) bar.style.width = `${row.share}%`;
+
+    // The weather test ran only at $55, so the average-year bar is the same
+    // run the slider shows there. Highlight it when the two line up, and at
+    // no other price.
+    const matched = document.querySelector<HTMLElement>('[data-scenario="average"]');
+    matched?.classList.toggle("is-matched", row.price === model.stressTest.price);
 
     input?.setAttribute(
       "aria-valuetext",
@@ -396,7 +413,13 @@ const description =
   .btn.small:hover .jump-note { color: var(--forest); }
 
   /* ---- the stress test, on paper rather than in the green bento --------- */
-  .stress { margin-top: clamp(14px, 2vw, 22px); }
+  /* These bars do not answer the slider, so the gap here is wider than the
+     bento gutter. The panel has to read as its own thing. */
+  .stress { margin-top: clamp(24px, 3.4vw, 40px); }
+  .stress-note {
+    margin: -0.6rem 0 clamp(22px, 3vw, 30px);
+    max-width: 52ch;
+  }
   .scenarios {
     display: grid;
     gap: clamp(20px, 2.6vw, 28px);
@@ -447,6 +470,20 @@ const description =
     );
   }
   .scenario-foot { margin: 8px 0 0; }
+
+  /* When the slider sits on $55 this bar is the same model run, so it gets a
+     ring and darker label. Any other price and the highlight is gone. */
+  .scenario.is-matched {
+    margin-inline: calc(var(--bento-pad) * -0.4);
+    padding: 12px var(--bento-pad) 14px;
+    border-radius: var(--r-sm);
+    background: rgba(31, 93, 69, 0.07);
+    box-shadow: inset 0 0 0 1px rgba(31, 93, 69, 0.22);
+  }
+  .scenario.is-matched .scenario-label { color: var(--ink); }
+  @media (prefers-reduced-motion: no-preference) {
+    .scenario { transition: background-color 160ms ease-out; }
+  }
 
   .finding {
     margin: clamp(24px, 3.2vw, 32px) 0 0;

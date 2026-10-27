@@ -7,24 +7,16 @@ semester: "Fall 2024"
 team: "Amida Akpan, Jade Malendez, Jakobi Davis, Jasmine Mustafa, Teresa Crisantos-Prudencio"
 myPart: "Project lead on a five-person team, and delivered most of the final presentation."
 tools: ["NREL PVWatts", "Python (economic feasibility model)"]
-cardSummary: "Whether solar can power vertical farming in Manila, costed out to a levelized electricity price."
+cardSummary: "Can solar power a vertical farm in Manila at a price that works?"
 description: "Cornell CEE 4210. A 28-page feasibility study of solar-driven vertical farming in Manila, with an economic model and an agrivoltaic LCOE of $0.0528 per kWh."
 problem: |
-  Vertical farming runs on electricity, which makes the cost of that electricity the question that decides whether a site works. Manila has the solar resource and the demand for local produce, but feasibility turns on the delivered cost per kWh rather than on either of those facts.
-
-  The study had to connect a generation decision to a farming operation and carry the connection all the way to a number.
+  Vertical farms run on electricity, so the price of that power decides whether the farm works. Manila has strong sun and a real need for local food. The question was whether solar could power a farm there cheaply enough.
 approach: |
-  Our five-person team produced a 28-page feasibility study covering the agrivoltaic system design, the siting constraints in Manila, and the farming operation it supports.
-
-  Under that sits an economic model that takes the system to a levelized cost of electricity, so the design options could be compared on cost rather than on description.
+  Our five-person team wrote a 28-page feasibility study: the solar design, where it could go in Manila, and the farm it would power. We modeled the solar output in NREL's PVWatts and built the economic model in Python.
 resultNote: |
-  The agrivoltaic configuration reaches a levelized cost of electricity of $0.0528 per kWh.
-
-  That figure is the center of the feasibility case. It sets what the farming operation has to clear to work, and it is low enough to keep the concept in play for the Manila site.
+  The rooftop solar setup comes out to $0.0528 per kWh. That's cheap enough to keep the idea alive for Manila.
 limits: |
-  A levelized cost of electricity is sensitive to the discount rate, the assumed capacity factor, and the capital cost inputs. Those are study assumptions, not quotes for a built system.
-
-  The study is a feasibility assessment, not an engineering design. It does not carry detailed structural work, permitting, or an operating plan for the farm itself.
+  That number depends on our assumptions for interest rates, how much sun the panels actually catch, and what the system costs to build. It's a feasibility study, not a final design. There's no structural design, permitting, or plan for running the farm day to day.
 numbers:
   - value: "$0.0528"
     label: "Agrivoltaic LCOE, per kWh"

@@ -7,24 +7,18 @@ semester: "Spring 2025"
 team: "Jakobi Davis, Adigun Olusola"
 myPart: "Project lead. I did all of the levelized cost of storage math, and delivered most of the final presentation."
 tools: ["Python (LCOS analysis on 2023 ERCOT real-time market data)", "Excel"]
-cardSummary: "Why the DeCordova battery facility costs what it does, and what ERCOT and CAISO market rules do and do not explain."
+cardSummary: "Why one Texas battery plant costs what it does, and how much of that is the market rules."
 description: "Cornell CEE 5200. Utility-scale battery storage economics at DeCordova, comparing ERCOT and CAISO, with a levelized cost of storage of $166.79 per MWh."
 problem: |
-  Utility-scale batteries are often described as held back by market rules. That framing is easy to assert and hard to check, because the cost of a specific facility and the rules it operates under tend to get discussed separately.
-
-  We took one real facility, the DeCordova battery installation, asked what its cost actually consists of, then asked which market structure suits it better.
+  People often blame market rules for holding big batteries back. I wanted to test that on one real plant. We took the DeCordova battery facility in Granbury, Texas, broke down what it actually costs, and checked how much of that the rules explain.
 approach: |
-  We built a levelized cost of storage figure for the facility from its capital and operating components, then compared how the same asset earns under ERCOT and under CAISO market design.
-
-  On the regulatory side we worked through ERCOT NPRR 1186 and the storage provisions of the Inflation Reduction Act, to separate what the rules change from what the hardware fixes.
+  I calculated the levelized cost of storage for DeCordova in Python, using 2023 ERCOT real-time market data. Then we compared it to Moss Landing in California's CAISO market, and worked through ERCOT's NPRR 1186 and the storage incentives in the Inflation Reduction Act.
 resultNote: |
-  The levelized cost of storage comes out at $166.79 per MWh. Decomposing that figure points at the design rather than the rulebook: the installation is not modular, so costs that a modular build would spread or avoid are carried in full.
+  DeCordova comes out to $166.79 per MWh, well above the market average. The main reason is the design. The plant isn't modular, so it carries costs a modular build would avoid.
 
-  Regulation shapes the revenue side and the tax treatment. It does not explain the cost side.
+  Moss Landing runs into the same problems in a completely different market. The rules shape how a battery gets paid. They don't explain why this one costs so much to build and run.
 limits: |
-  The levelized figure rests on cost inputs for a single facility, plus a chosen discount rate and cycle life. Facilities differ widely, so this number should not be read as an industry average.
-
-  The ERCOT and CAISO comparison uses market design as of the course term. NPRR 1186 and Inflation Reduction Act implementation have both moved since, and either can shift the revenue conclusion without touching the cost conclusion.
+  This is one facility, so the number isn't an industry average. The rules have also kept changing since we did this, which could shift how a plant like this earns money. It wouldn't change what it costs.
 numbers:
   - value: "$166.79"
     label: "Levelized cost of storage, per MWh"

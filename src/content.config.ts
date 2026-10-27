@@ -19,6 +19,8 @@ const projects = defineCollection({
     // One line, states the result.
     result: z.string(),
     course: z.string(),
+    // Solo work, so the page says "What I built" instead of "What we built".
+    solo: z.boolean().optional(),
     semester: z.string(),
     team: z.string(),
     myPart: z.string(),

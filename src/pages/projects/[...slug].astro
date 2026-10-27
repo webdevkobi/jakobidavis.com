@@ -18,6 +18,11 @@ export const getStaticPaths: GetStaticPaths = async () => {
 const { project } = Astro.props;
 const d = project.data;
 
+// Solo projects say "I built"; the team projects say "we built". Set `solo`
+// in the project's frontmatter to switch both labels.
+const builtLabel = d.solo ? "What I built" : "What we built";
+const foundLabel = d.solo ? "What I found" : "What we found";
+
 // The markdown body is optional. It renders as "Notes" at the end.
 const { Content } = await render(project);
 const hasNotes = (project.body ?? "").trim().length > 0;
@@ -78,7 +83,7 @@ const hasNotes = (project.body ?? "").trim().length > 0;
     <!-- Approach -->
     <section class="section">
       <div class="wrap" data-reveal>
-        <h2 class="block-label">What I built</h2>
+        <h2 class="block-label">{builtLabel}</h2>
         <Prose text={d.approach} />
         <ul class="tools">
           {d.tools.map((tool) => <li class="meta"><Value value={tool} /></li>)}
@@ -89,7 +94,7 @@ const hasNotes = (project.body ?? "").trim().length > 0;
     <!-- Result -->
     <section class="section">
       <div class="wrap" data-reveal>
-        <h2 class="block-label">What I found</h2>
+        <h2 class="block-label">{foundLabel}</h2>
         <ul class="stats">
           {
             d.numbers.map((n) => (
@@ -110,7 +115,7 @@ const hasNotes = (project.body ?? "").trim().length > 0;
     <!-- Limits and sensitivity -->
     <section class="section">
       <div class="wrap" data-reveal>
-        <h2 class="block-label">What it does not cover</h2>
+        <h2 class="block-label">Where it stops working</h2>
         <Prose text={d.limits} />
       </div>
     </section>

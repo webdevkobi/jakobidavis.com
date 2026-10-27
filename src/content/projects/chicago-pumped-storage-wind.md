@@ -8,24 +8,24 @@ semester: "Spring 2025"
 team: "Jakobi Davis, Ali Shabazz, Max Jensen"
 myPart: "Project lead. I collected and scraped all of the wind and demand data, helped build the model predictive control, and delivered most of the final presentation. Teammates led the forecasting model and the graphing."
 tools: ["Python (autoregressive forecasting, NSGA-II, model predictive control)"]
-cardSummary: "Forecast the wind, size the reservoir, then dispatch it. Three methods stacked into one system for Chicago."
+cardSummary: "Forecast the wind, size the storage, then run it. Three methods stacked into one system."
 description: "Cornell CEE 4800. Pumped storage sized with NSGA-II and dispatched with model predictive control against forecast wind, cutting unmet demand by up to 51%."
 problem: |
-  Wind supply and electricity demand do not line up hour to hour, and in Chicago that mismatch leaves demand unmet even when annual wind energy looks sufficient.
+  Wind doesn't blow on demand's schedule. In Chicago, that mismatch leaves people short on power even in years when total wind output looks like plenty.
 
-  Storage closes some of the gap, but sizing it and operating it are different problems. A reservoir sized for an average week is wrong for a bad one, and a reservoir operated without a view of coming wind gives back much of its value.
+  Pumped storage can cover the gap, but you have to get two things right: how big to build it, and when to pump and release.
 approach: |
-  We built the system in three stages. An autoregressive model forecasts wind output. NSGA-II searches reservoir and turbine sizing across competing objectives rather than collapsing them into a single cost number. Model predictive control then dispatches the sized system against the rolling forecast.
+  Three pieces. An autoregressive model forecasts the wind. A genetic algorithm (NSGA-II, run for 1,000 generations) sizes the pumping rate, release rate, and reservoir to minimize unmet demand. Then model predictive control decides hour by hour when to pump and when to release, using the forecast.
 
-  Stacking the three means the sizing decision is made against how the system will actually be operated, not against a simplified dispatch rule.
+  I pulled and scraped all the wind and demand data and worked on the model predictive control.
 resultNote: |
-  The sized and dispatched system reduces unmet demand by up to 51% compared with wind alone.
+  The system cuts unmet demand by up to 51% compared with wind alone. Re-running the optimization more often made it even better.
 
-  The multi-objective sizing step matters to that number. Points along the NSGA-II frontier trade capital cost against unmet demand, so 51% is the favorable end of a range rather than a single design answer.
+  The catch is cost. The levelized cost of storage came out to $498.87 per MWh, higher than typical pumped storage.
 limits: |
-  The autoregressive forecast is the weak link. Model predictive control performs only as well as the forecast it is given, and forecast error at longer horizons erodes the dispatch advantage.
+  Everything depends on the wind forecast. When the forecast is off, the dispatch gets worse. The genetic algorithm also has some randomness in it, so the exact numbers shift a little run to run.
 
-  Siting is treated as given. Pumped storage needs specific geography and head, and the Chicago area constrains both heavily. The study does not carry a site feasibility assessment.
+  We also didn't do a real site study. Pumped storage needs elevation and water, and the Chicago area doesn't have much of either.
 numbers:
   - value: "51%"
     label: "Maximum reduction in unmet demand"
