@@ -103,13 +103,67 @@ const year = new Date().getFullYear();
           />
         </a>
 
-        <nav aria-label="Main">
+        <nav class="head-nav" aria-label="Main">
           <ul>
             {
               site.nav.map((item) => (
                 <li>
                   <a href={item.href} aria-current={isCurrent(item.href) ? "page" : undefined}>
                     {item.label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </nav>
+
+        {/* Phones get the same seven links in a sheet instead. As a wrapped
+            row they were two lines of 20px tap targets. */}
+        <button
+          type="button"
+          class="nav-toggle"
+          aria-expanded="false"
+          aria-controls="site-menu"
+          data-nav-open
+        >
+          Menu
+        </button>
+      </div>
+
+      <div
+        class="nav-sheet"
+        id="site-menu"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Site menu"
+        data-nav-sheet
+        hidden
+      >
+        <div class="wrap nav-sheet-top">
+          <button
+            type="button"
+            class="nav-close"
+            aria-label="Close menu"
+            data-nav-close
+          >
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+              <path
+                d="M5 5l12 12M17 5L5 17"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <nav class="nav-sheet-nav" aria-label="Site">
+          <ul>
+            {
+              site.nav.map((item) => (
+                <li>
+                  <a href={item.href} aria-current={isCurrent(item.href) ? "page" : undefined}>
+                    <span>{item.label}</span>
                   </a>
                 </li>
               ))
@@ -187,6 +241,77 @@ const year = new Date().getFullYear();
 
         for (const el of targets) observer.observe(el);
       }
+
+      /* The phone menu. Escape and a link tap close it, Tab cycles inside
+         it, and the page behind it is locked while it is up. With JavaScript
+         off the button never appears, so nothing is hidden behind it. */
+      const navToggle = document.querySelector<HTMLButtonElement>("[data-nav-open]");
+      const navSheet = document.querySelector<HTMLElement>("[data-nav-sheet]");
+      const navClose = navSheet?.querySelector<HTMLButtonElement>("[data-nav-close]");
+
+      if (navToggle && navSheet && navClose) {
+        function stops() {
+          return Array.from(
+            navSheet!.querySelectorAll<HTMLElement>("a[href], button:not([disabled])"),
+          );
+        }
+
+        function onKeydown(event: KeyboardEvent) {
+          if (event.key === "Escape") {
+            closeSheet();
+            navToggle!.focus();
+            return;
+          }
+          if (event.key !== "Tab") return;
+
+          const items = stops();
+          if (!items.length) return;
+          const first = items[0];
+          const last = items[items.length - 1];
+          const active = document.activeElement;
+
+          if (event.shiftKey && (active === first || !navSheet!.contains(active))) {
+            event.preventDefault();
+            last.focus();
+          } else if (!event.shiftKey && active === last) {
+            event.preventDefault();
+            first.focus();
+          }
+        }
+
+        function openSheet() {
+          navSheet!.hidden = false;
+          document.documentElement.classList.add("nav-open");
+          navToggle!.setAttribute("aria-expanded", "true");
+          navClose!.focus();
+          document.addEventListener("keydown", onKeydown);
+        }
+
+        function closeSheet() {
+          navSheet!.hidden = true;
+          document.documentElement.classList.remove("nav-open");
+          navToggle!.setAttribute("aria-expanded", "false");
+          document.removeEventListener("keydown", onKeydown);
+        }
+
+        navToggle.addEventListener("click", openSheet);
+        navClose.addEventListener("click", () => {
+          closeSheet();
+          navToggle.focus();
+        });
+        /* The link navigates anyway; closing first means a same-page link
+           does not leave the sheet sitting open over the page. */
+        for (const link of navSheet.querySelectorAll("a")) {
+          link.addEventListener("click", closeSheet);
+        }
+        /* Rotating to a width that shows the real nav would otherwise leave
+           the sheet stranded over the page. */
+        window
+          .matchMedia("(min-width: 768.05px)")
+          .addEventListener("change", (event) => {
+            if (event.matches && !navSheet.hidden) closeSheet();
+          });
+      }
     </script>
   </body>
 </html>
@@ -214,10 +339,6 @@ const year = new Date().getFullYear();
   /* Wordmark on the light header. The compact mark takes over on narrow screens. */
   .brand-wordmark { width: 168px; height: auto; }
   .brand-mark { display: none; width: 44px; height: auto; }
-  @media (max-width: 430px) {
-    .brand-wordmark { display: none; }
-    .brand-mark { display: block; }
-  }
 
   nav ul {
     display: flex;
@@ -241,6 +362,101 @@ const year = new Date().getFullYear();
   .head-inner nav a:hover { color: var(--ink); }
   .head-inner nav a[aria-current="page"] {
     color: var(--ink);
+    box-shadow: inset 0 -2px 0 0 var(--green);
+  }
+
+  /* ---- phones: the mark, a Menu button, and the sheet behind it ---------- */
+
+  .nav-toggle { display: none; }
+
+  @media (max-width: 768px) {
+    .brand-wordmark { display: none; }
+    .brand-mark { display: block; }
+    .head-nav { display: none; }
+
+    /* The mark is 26px tall; the link it sits in is not. */
+    .brand {
+      display: flex;
+      align-items: center;
+      min-height: 44px;
+    }
+
+    /* Same small label as the links it replaces, at a real tap size. */
+    .nav-toggle {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      padding: 0 2px;
+      border: 0;
+      background: transparent;
+      font-family: var(--sans);
+      font-size: var(--step-label);
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink);
+      cursor: pointer;
+    }
+    .nav-toggle:hover { color: var(--ink-2); }
+  }
+
+  /* The sheet is plain paper over the page. It is only ever opened from the
+     Menu button, which only exists under 768px. */
+  .nav-sheet {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    background: var(--page);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  .nav-sheet[hidden] { display: none; }
+
+  .nav-sheet-top {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-block: 20px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .nav-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    margin-right: -11px;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+  }
+
+  .nav-sheet-nav { padding: 14px var(--pad) 48px; }
+  .nav-sheet-nav ul {
+    display: grid;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  /* Newsreader at 28px, one per row, each row its own tap target. */
+  .nav-sheet-nav a {
+    display: flex;
+    align-items: center;
+    min-height: 52px;
+    font-family: var(--display);
+    font-weight: 500;
+    font-size: 1.75rem;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  /* The rule hugs the word, the way it does in the desktop nav. */
+  .nav-sheet-nav a[aria-current="page"] span {
     box-shadow: inset 0 -2px 0 0 var(--green);
   }
 
@@ -289,6 +505,23 @@ const year = new Date().getFullYear();
     color: var(--on-dark);
     text-decoration: underline 2px var(--green);
     text-underline-offset: 3px;
+  }
+
+  /* Phones: one 44px row per footer link, so the gap between the labels is
+     the gap between the hit areas too. */
+  @media (max-width: 768px) {
+    .foot-nav { gap: 22px 40px; }
+    .foot-nav ul { gap: 0; }
+    .foot-nav li {
+      display: flex;
+      align-items: center;
+      min-height: 44px;
+    }
+    .foot-nav li > a {
+      display: flex;
+      align-items: center;
+      align-self: stretch;
+    }
   }
 
   .foot-base {

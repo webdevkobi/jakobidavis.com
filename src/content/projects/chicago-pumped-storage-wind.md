@@ -2,7 +2,7 @@
 order: 3
 title: "Pumped storage against wind intermittency in Chicago"
 metaTitle: "Pumped storage against wind in Chicago"
-result: "Sized and dispatched pumped storage that cuts unmet demand by up to 51% against wind alone."
+result: "Pumped storage that cuts unmet demand by up to 51% compared with wind alone."
 course: "CEE 4800"
 semester: "Spring 2025"
 team: "Jakobi Davis, Ali Shabazz, Max Jensen"

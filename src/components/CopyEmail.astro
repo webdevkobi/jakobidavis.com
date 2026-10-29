@@ -144,6 +144,21 @@ const { email, textClass = "" } = Astro.props;
     .copy-btn { transition: none; }
   }
 
+  /* Phones: the chip stays small, its hit area does not. Nothing tappable
+     sits within 22px of it above or below. */
+  @media (max-width: 768px) {
+    .copy-btn { position: relative; }
+    .copy-btn::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 50%;
+      height: 44px;
+      transform: translateY(-50%);
+    }
+  }
+
   /* Visually hidden, still announced. */
   .vh {
     position: absolute;

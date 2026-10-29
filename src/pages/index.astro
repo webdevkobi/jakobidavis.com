@@ -57,10 +57,12 @@ const description =
           </figcaption>
         </figure>
 
-        <div class="btn-row">
-          <a class="btn solid" href="/projects/">Projects</a>
-          <a class="btn" href="/resume/">Resume</a>
-          <a class="btn" href={site.calcomDiscovery} rel="noopener">Book a call</a>
+        <div class="btn-row hero-actions">
+          <a class="btn solid act-projects" href="/projects/">Projects</a>
+          <a class="btn act-resume" href="/resume/">Resume</a>
+          <a class="btn act-book" href={site.calcomDiscovery} rel="noopener">
+            Book a call
+          </a>
         </div>
       </div>
 
@@ -236,6 +238,57 @@ const description =
   @media (min-width: 920px) {
     .hero-photo { justify-content: flex-end; }
     .hero-stage { max-width: min(100%, 430px); }
+  }
+
+  /* Phones: the photo comes second, straight under the headline, because at
+     the bottom of the column it sat about 1,100px down and most visitors
+     never got to it. The copy, the finding and the buttons follow. */
+  @media (max-width: 768px) {
+    .hero-inner {
+      grid-template-areas:
+        "head"
+        "photo"
+        "copy";
+    }
+    .hero-head { grid-area: head; }
+    .hero-photo { grid-area: photo; }
+    .hero-copy { grid-area: copy; }
+
+    /* The panel runs the full content width and the stage is fixed at 320px
+       tall, so the cutout is sized by height instead of width: head and
+       shoulders still clear the top of the panel, legs still crop on its
+       bottom edge. */
+    .hero-stage {
+      max-width: 100%;
+      height: 320px;
+    }
+    .hero-stage img {
+      width: auto;
+      height: 100%;
+      margin-inline: auto;
+    }
+
+    /* Three full-width buttons, the call first: on a phone booking is the
+       action worth leading with, so it takes the solid weight here. */
+    .hero-actions {
+      flex-direction: column;
+      gap: 12px;
+    }
+    .hero-actions .btn {
+      width: 100%;
+      justify-content: center;
+    }
+    .hero-actions .act-book {
+      order: -1;
+      background: var(--ink);
+      border-color: var(--ink);
+      color: #fff;
+    }
+    .hero-actions .act-projects {
+      background: transparent;
+      border-color: var(--ink);
+      color: var(--ink);
+    }
   }
 
   /* The work bento grid: mixed sizes on desktop, one column on phones. */

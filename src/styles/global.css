@@ -532,3 +532,29 @@ figcaption.meta {
   a.bento:hover,
   a.card:hover { transform: none; }
 }
+
+/* --------------------------------------------------------- touch ---------- */
+
+/* The menu sheet owns the screen while it is open, so the page behind it
+   holds still. */
+html.nav-open,
+html.nav-open body { overflow: hidden; }
+
+/* Phones: nothing tappable is under 44px tall. Buttons grow for real. Text
+   links that would push their paragraph around instead carry .tap, which
+   grows the hit area with a pseudo element the eye never sees. Only put .tap
+   on a link with nothing tappable within 22px of it, above or below. */
+@media (max-width: 768px) {
+  .btn { min-height: 44px; }
+
+  .tap { position: relative; }
+  .tap::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 44px;
+    transform: translateY(-50%);
+  }
+}

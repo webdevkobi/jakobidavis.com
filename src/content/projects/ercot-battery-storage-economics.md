@@ -1,7 +1,7 @@
 ---
 order: 2
 title: "Utility-scale battery economics at DeCordova"
-result: "A levelized cost of storage of $166.79 per MWh, traced to non-modular design rather than to regulation."
+result: "$166.79 per MWh. The main reason is the design. The plant isn't modular."
 course: "CEE 5200"
 semester: "Spring 2025"
 team: "Jakobi Davis, Adigun Olusola"

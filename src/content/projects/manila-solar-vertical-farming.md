@@ -1,7 +1,7 @@
 ---
 order: 5
 title: "Solar-driven vertical farming in Manila"
-result: "A 28-page feasibility study with an economic model, built around an agrivoltaic LCOE of $0.0528 per kWh."
+result: "Rooftop solar at $0.0528 per kWh, cheap enough to keep the idea alive for Manila."
 course: "CEE 4210"
 semester: "Fall 2024"
 team: "Amida Akpan, Jade Malendez, Jakobi Davis, Jasmine Mustafa, Teresa Crisantos-Prudencio"

@@ -1,7 +1,7 @@
 ---
 order: 1
 title: "NYISO capacity expansion under a carbon tax"
-result: "A $55 per ton carbon price reaches 70% renewables in an average year. Guaranteeing 70% in a poor resource year takes $120."
+result: "$55 a ton gets New York to 70% renewables in a normal year. Holding 70% in a bad weather year takes $120."
 course: "CEE 4880 capstone"
 semester: "Spring 2025"
 team: "Grace Raab, Jakobi Davis, Nick Norris"

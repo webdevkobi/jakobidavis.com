@@ -360,7 +360,7 @@ const stops = [
 
                 {stop.link && (
                   <p class="meta stop-link">
-                    <a href={stop.link.href} rel="noopener">
+                    <a class="tap" href={stop.link.href} rel="noopener">
                       {stop.link.label}
                     </a>
                   </p>
@@ -744,14 +744,22 @@ const stops = [
     line-height: 1.15;
     letter-spacing: 0.04em;
   }
-  /* On a narrow phone three prints across leave a frame too small for
-     "Copenhagen" to fit on one line, and the caption would break mid-word.
-     Below that, they wrap to two rows and keep their width. */
-  @media (max-width: 479.98px) {
-    .is-fan { flex-wrap: wrap; row-gap: 12px; }
-    .is-fan .print { width: min(124px, 44%); }
+  /* Phones: three across left a 110px frame, too small to make out what is
+     in it. Tanzania and Copenhagen go two across with Iceland centred
+     underneath, and the row takes the bento padding back so each print runs
+     close to half the card. */
+  @media (max-width: 768px) {
+    .is-fan {
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-inline: calc(var(--bento-pad) * -1);
+      column-gap: 10px;
+      row-gap: 14px;
+    }
+    .is-fan .print { --tape-w: 58px; width: 45%; }
     .is-fan .print:nth-child(2) { margin-top: 10px; }
     .is-fan .print:nth-child(3) { margin-top: 0; }
+    .is-fan figcaption { font-size: 1rem; }
   }
 
   /* Two prints: the catch in front, the dugout shot smaller and behind. */
