@@ -191,7 +191,21 @@ const year = new Date().getFullYear();
 
         <nav class="foot-nav" aria-label="Footer">
           <ul>
-            {site.nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+            {
+              site.nav.map((item) => (
+                <>
+                  <li><a href={item.href}>{item.label}</a></li>
+                  {/* The carbon price model is part of the capstone project
+                      now, so it hangs off Projects instead of standing as its
+                      own section the way it did in the nav. */}
+                  {item.href === "/projects/" && (
+                    <li class="foot-sub">
+                      <a href="/models/">Carbon price model</a>
+                    </li>
+                  )}
+                </>
+              ))
+            }
           </ul>
           <ul>
             {/* Plain text, not a mailto: Safari hands mailto links off to a
@@ -317,9 +331,11 @@ const year = new Date().getFullYear();
 </html>
 
 <style>
-  /* The header sits straight on the graph paper. A hairline keeps it seated. */
+  /* Solid paper, not transparent: the nav links need to sit on flat colour
+     rather than on whatever part of the wash happens to scroll under them.
+     A hairline keeps it seated. */
   .site-head {
-    background: transparent;
+    background: var(--page);
     border-bottom: 1px solid var(--rule);
   }
   .head-inner {
@@ -495,6 +511,16 @@ const year = new Date().getFullYear();
     letter-spacing: 0.08em;
     text-transform: uppercase;
   }
+  /* The sub-link is a detail under Projects, not a seventh section, so it
+     drops the label casing and steps in from the column. */
+  .foot-nav .foot-sub { padding-left: 14px; }
+  .foot-nav ul:first-child .foot-sub a {
+    font-size: 0.8125rem;
+    font-weight: 400;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
   /* Matches .foot-nav a so the unlinked address sits in line with the column. */
   .foot-email {
     font-size: 0.925rem;

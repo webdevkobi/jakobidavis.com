@@ -23,6 +23,10 @@ const d = project.data;
 const builtLabel = d.solo ? "What I built" : "What we built";
 const foundLabel = d.solo ? "What I found" : "What we found";
 
+// The carbon price slider is built from this project's runs, so the capstone
+// page is where the invitation to open it belongs.
+const hasModel = project.id === "nyiso-capacity-expansion-carbon-tax";
+
 // The markdown body is optional. It renders as "Notes" at the end.
 const { Content } = await render(project);
 const hasNotes = (project.body ?? "").trim().length > 0;
@@ -105,6 +109,18 @@ const hasNotes = (project.body ?? "").trim().length > 0;
             ))
           }
         </ul>
+        {
+          hasModel && (
+            <div class="bento green try-model">
+              <p class="try-line">
+                Try the model yourself: move the carbon price and watch New
+                York&rsquo;s grid respond.
+              </p>
+              <a class="btn solid" href="/models/">Open the interactive model</a>
+            </div>
+          )
+        }
+
         <div class:list={["result-body", { "has-figure": d.figure.src }]}>
           <Prose text={d.resultNote} />
           <Figure src={d.figure.src} alt={d.figure.alt} caption={d.figure.caption} />
@@ -215,6 +231,26 @@ const hasNotes = (project.body ?? "").trim().length > 0;
     text-transform: none;
     line-height: 1.45;
     color: var(--ink-2);
+  }
+
+  /* Sits between the numbers and the write-up, so the offer lands while the
+     findings are still on screen. */
+  .try-model {
+    display: grid;
+    justify-items: start;
+    gap: clamp(18px, 2.4vw, 22px);
+    max-width: 46ch;
+    margin-top: clamp(28px, 4vw, 40px);
+  }
+  /* Two classes, because `.green :is(p, ...)` would otherwise win and mute it. */
+  .try-model .try-line {
+    margin: 0;
+    font-family: var(--display);
+    font-weight: 500;
+    font-size: var(--step-1);
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: var(--on-dark);
   }
 
   .result-body {

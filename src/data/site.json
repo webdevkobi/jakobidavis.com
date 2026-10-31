@@ -11,7 +11,6 @@
   "resumeUpdated": "September 2026",
   "nav": [
     { "label": "Projects", "href": "/projects/" },
-    { "label": "Models", "href": "/models/" },
     { "label": "About", "href": "/about/" },
     { "label": "Writing", "href": "/writing/" },
     { "label": "Credentials", "href": "/credentials/" },

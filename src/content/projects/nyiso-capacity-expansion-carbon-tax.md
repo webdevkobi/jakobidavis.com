@@ -44,5 +44,5 @@ downloads:
     href: "/papers/nyiso-capacity-expansion-carbon-tax-slides.pdf"
 ---
 
-The slider on the [Models](/models/) page runs on this project. Every $5 step
-from $0 to $55 is a real model run.
+Every $5 step from $0 to $55 on the [carbon price slider](/models/) is a real
+model run. Nothing in between is interpolated.

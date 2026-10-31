@@ -17,7 +17,8 @@ const MATCH_KEY = "average";
 // without JavaScript.
 const start = rowAtPrice(rows, START_PRICE);
 
-const title = "Models";
+// "Models" was the nav label; the page is one model, so it is named for it.
+const title = "Carbon price model";
 const description =
   "An interactive carbon price model from my Cornell capstone. Move the price from $0 to $55 a ton and read renewable share and system cost off the AMPL runs.";
 ---
@@ -25,12 +26,19 @@ const description =
 <Base title={title} description={description}>
   <section class="section">
     <div class="wrap">
-      <p class="eyebrow">Models</p>
+      <p class="eyebrow">Interactive model</p>
       <h1>What a carbon price buys New York.</h1>
+      {/* The context comes before the tool: this page is a view into the
+          capstone, so say whose model it is before anyone drags anything. */}
       <p class="lede">
-        Every stop on this slider is a real run of my capstone model. Nothing
-        in between is filled in. At ${MAX} a ton, New York hits {GOAL}%
-        renewables in a normal year. A bad weather year is a different story.
+        This runs on my <a href="/projects/nyiso-capacity-expansion-carbon-tax/"
+          >CEE 4880 capstone</a
+        >, a model of New York&rsquo;s grid I built in AMPL with two teammates.
+        Every stop on the slider is a real model run.
+      </p>
+      <p class="source-note">
+        At ${MAX} a ton, New York hits {GOAL}% renewables in a normal year. A
+        bad weather year is a different story.
       </p>
     </div>
   </section>
@@ -262,6 +270,14 @@ const description =
 
 
 <style>
+  /* The headline finding, set under the lede. Quieter than the lede, because
+     the slider below says the same thing with numbers. */
+  .source-note {
+    margin-top: 0.8em;
+    max-width: 60ch;
+    color: var(--ink-2);
+  }
+
   .tool {
     display: grid;
     gap: clamp(26px, 3.6vw, 38px);

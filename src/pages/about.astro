@@ -338,7 +338,7 @@ const stops = [
     </div>
   </section>
 
-  {/* The long version: a line down the graph paper with one stop per dot.
+  {/* The long version: a line down the page with one stop per dot.
       Stops alternate sides on desktop and run in one column, line on the
       left, on phones. */}
   <section class="section plain">
@@ -607,7 +607,7 @@ const stops = [
 
   /* ------------------------------------------------------- the stops ------
 
-     A dashed rule down the graph paper with one dot per stop. The year rides
+     A dashed rule down the page with one dot per stop. The year rides
      the rule like a ruler mark, the bento sits to one side, and the Caveat
      note sits in the open margin with an arrow back at the box. Desktop
      alternates sides; phones run one column with the rule on the left. */
@@ -655,8 +655,8 @@ const stops = [
     padding-left: calc(var(--rail) + 24px);
   }
 
-  /* The dot: brand green with a page-coloured ring, so it sits cleanly on
-     the graph paper rather than on top of a grid line. */
+  /* The dot: brand green with a page-coloured ring, so it reads as a stop
+     on the rule rather than a bead sitting on the line. */
   .stop::before {
     content: "";
     position: absolute;

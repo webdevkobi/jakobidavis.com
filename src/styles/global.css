@@ -1,7 +1,8 @@
 /* ==========================================================================
    jakobidavis.com
 
-   Warm paper, graph-ruled, with content in bento boxes on top of it.
+   Warm paper under a risograph wash, with content in bento boxes on top
+   of it.
 
    Type: Newsreader (serif) for headings and big numbers, at weight 500 and
    never bold. Inter for body, nav, buttons and labels. Caveat for the rare
@@ -21,7 +22,7 @@
   --ink-2: #5a5047;
   --forest: #1f5d45;
 
-  /* Bentos are white so they mask the grid and keep text off the rules. */
+  /* Bentos are white so they sit clean on the wash and carry the text. */
   --card: #ffffff;
   --panel: #fbf9f4;
   /* Sage: the tinted panel the hero cutout stands in. Carries no text. */
@@ -30,12 +31,6 @@
   --rule: #e3dacb;
   --rule-strong: #d6cab4;
   --rule-dash: #c8bba3;
-
-  /* Graph paper: warm gray-green, minor every 24px, major every 120px. */
-  --grid-minor: rgba(90, 100, 84, 0.04);
-  --grid-major: rgba(90, 100, 84, 0.07);
-  --grid-minor-step: 24px;
-  --grid-major-step: 120px;
 
   /* On the forest bentos and the dark footer. */
   --on-dark: #ffffff;
@@ -71,13 +66,22 @@
 
 html {
   -webkit-text-size-adjust: 100%;
-  background-color: var(--page);
+  /* The grain rides on the root so it covers the overscroll area too. */
+  background: url("/backgrounds/grain.svg"), var(--page);
 }
 
-/* --------------------------------------------------------- graph paper ---- */
+/* --------------------------------------------------------- riso wash ----- */
 
+/* No pattern. Two soft colour fields under a heavy grain, the way a two-pass
+   risograph print leaves ink: mint in the top right, warm sand bottom left.
+
+   The wash lives on a fixed pseudo-element rather than on the body, so it
+   stays put while the page scrolls and sits behind every bento. iOS ignores
+   `background-attachment: fixed`, but it honours a fixed element, so phones
+   get the same sheet. */
 body {
   margin: 0;
+  position: relative;
   color: var(--ink);
   font-family: var(--sans);
   font-size: var(--step-0);
@@ -86,30 +90,19 @@ body {
   font-synthesis-weight: none;
   -webkit-font-smoothing: antialiased;
 
-  background-color: var(--page);
-  /* Major lines first so they paint over the minor ones. */
-  background-image:
-    repeating-linear-gradient(
-      to right,
-      var(--grid-major) 0 1px,
-      transparent 1px var(--grid-major-step)
-    ),
-    repeating-linear-gradient(
-      to bottom,
-      var(--grid-major) 0 1px,
-      transparent 1px var(--grid-major-step)
-    ),
-    repeating-linear-gradient(
-      to right,
-      var(--grid-minor) 0 1px,
-      transparent 1px var(--grid-minor-step)
-    ),
-    repeating-linear-gradient(
-      to bottom,
-      var(--grid-minor) 0 1px,
-      transparent 1px var(--grid-minor-step)
-    );
-  background-position: 0 0;
+  background: transparent;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    url("/backgrounds/grain.svg"),
+    radial-gradient(60% 50% at 88% 6%, rgba(63, 191, 134, 0.20), transparent 70%),
+    radial-gradient(50% 45% at 5% 95%, rgba(196, 160, 98, 0.16), transparent 70%);
 }
 
 img, svg { max-width: 100%; display: block; }
